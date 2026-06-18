@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Rebees Management — Sales Dashboard</title>
+<style>
+/* ── CSS Variables ─────────────────────────────────────────────────────────── */
+:root{
+  --bg:#0d0d1a;
+  --bg-grad:linear-gradient(165deg,#0d0d1a 0%,#1a1a2e 40%,#16213e 100%);
+  --surface:rgba(255,255,255,.04);
+  --surface2:rgba(255,255,255,.03);
+  --surface3:rgba(255,255,255,.05);
+  --surface-h:rgba(255,255,255,.07);
+  --bd:rgba(255,255,255,.07);
+  --bd2:rgba(255,255,255,.12);
+  --text:#e0e0e0;
+  --text2:#bbb;
+  --text3:#999;
+  --text4:#778;
+  --input-bg:rgba(255,255,255,.04);
+  --input-bd:rgba(255,255,255,.12);
+  --input-text:#e0e0e0;
+  --modal-bg:linear-gradient(165deg,#111122,#1a1a2e);
+  --overlay:rgba(0,0,0,.78);
+  --tt-bg:rgba(12,12,28,.97);
+  --tt-bd:rgba(255,255,255,.14);
+  --sc-track:rgba(255,255,255,.02);
+  --sc-thumb:rgba(255,255,255,.14);
+  --ftr:#556;
+}
+body.light-mode{
+  --bg:#f4f5fb;
+  --bg-grad:linear-gradient(165deg,#f4f5fb 0%,#ecedfa 40%,#e6e8f7 100%);
+  --surface:rgba(255,255,255,.95);
+  --surface2:rgba(255,255,255,.8);
+  --surface3:rgba(255,255,255,1);
+  --surface-h:rgba(0,0,0,.04);
+  --bd:rgba(0,0,0,.08);
+  --bd2:rgba(0,0,0,.14);
+  --text:#1a1a2e;
+  --text2:#2d3561;
+  --text3:#555;
+  --text4:#778;
+  --input-bg:rgba(0,0,0,.04);
+  --input-bd:rgba(0,0,0,.14);
+  --input-text:#1a1a2e;
+  --modal-bg:linear-gradient(165deg,#f4f5fb,#ecedfa);
+  --overlay:rgba(0,0,0,.45);
+  --tt-bg:rgba(255,255,255,.99);
+  --tt-bd:rgba(0,0,0,.13);
+  --sc-track:rgba(0,0,0,.03);
+  --sc-thumb:rgba(0,0,0,.16);
+  --ftr:#889;
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;color:var(--text);transition:background .25s,color .25s}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--sc-track)}
+::-webkit-scrollbar-thumb{background:var(--sc-thumb);border-radius:3px}
+#root{min-height:100vh;background:var(--bg-grad);padding:24px 20px;transition:background .25s}
+
+/* ── Header ────────────────────────────────────────────────────────────────── */
+.hdr{max-width:1400px;margin:0 auto 20px}
+.hdr-inner{display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap}
+.brand-left{flex-shrink:0;padding-top:4px}
+.brand-wordmark{font-size:24px;font-weight:800;color:#7C2234;letter-spacing:-.3px;line-height:1}
+.hdr .sub{font-size:12px;font-weight:500;color:var(--text4);margin-top:4px;letter-spacing:.2px}
+.hdr-tabs-area{flex:1;min-width:0}
+.prop-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.prop-tab{padding:9px 18px;border-radius:10px;border:2px solid var(--bd);cursor:pointer;background:var(--surface);text-align:left;min-width:148px;transition:all .2s;color:inherit}
+.prop-tab:hover{border-color:var(--bd2);background:var(--surface-h)}
+.prop-tab .pname{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:3px}
+.prop-tab .pmeta{font-size:10px;color:var(--text4);display:flex;align-items:center;gap:5px}
+.prop-tab.active .pname{color:var(--pc)}
+.prop-tab.active{border-color:var(--pc) !important;background:color-mix(in srgb,var(--pc) 12%,transparent)}
+.theme-toggle{margin-left:auto;flex-shrink:0;align-self:center;display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:20px;border:1px solid var(--bd2);background:var(--surface);color:var(--text3);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap}
+.theme-toggle:hover{background:var(--surface-h);color:var(--text)}
+.owner-tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.owner-tool-btn{display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:8px;border:1px solid var(--bd2);background:var(--surface);color:var(--text3);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.owner-tool-btn:hover{border-color:var(--bd2);background:var(--surface-h);color:var(--text)}
+.owner-banner{display:flex;align-items:center;gap:14px;padding:14px 20px;border-radius:12px;border:1px solid color-mix(in srgb,var(--pc) 35%,transparent);background:color-mix(in srgb,var(--pc) 10%,transparent)}
+.owner-banner .ob-icon{font-size:28px}
+.owner-banner .ob-name{font-size:18px;font-weight:700;color:var(--pc)}
+.owner-banner .ob-meta{font-size:11px;color:var(--text4);margin-top:2px}
+
+/* ── KPIs ──────────────────────────────────────────────────────────────────── */
+.inner{max-width:1400px;margin:0 auto}
+.kpi-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.kpi{background:var(--surface);border-radius:10px;padding:8px 16px;border:1px solid var(--bd)}
+.kpi .kl{font-size:9px;color:var(--text4);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.kpi .kv{font-size:18px;font-weight:700;color:var(--text);margin-top:1px}
+
+/* ── Layout / Sidebar ──────────────────────────────────────────────────────── */
+.layout{display:grid;grid-template-columns:256px 1fr;gap:18px;align-items:start}
+.sidebar{display:flex;flex-direction:column;gap:10px}
+.panel{background:var(--surface2);border-radius:12px;padding:12px;border:1px solid var(--bd)}
+.panel-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--pc);margin-bottom:6px}
+.toggle-row{display:flex;gap:6px}
+.tog-btn{flex:1;padding:5px 0;border-radius:6px;border:none;cursor:pointer;font-size:12px;font-weight:600;background:var(--surface);color:var(--text3);transition:all .2s;font-family:inherit}
+.tog-btn.on{background:color-mix(in srgb,var(--pc) 30%,transparent);color:var(--pc)}
+.yr-grid{display:flex;flex-wrap:wrap;gap:5px}
+.yr-btn{padding:5px 12px;border-radius:6px;border:none;cursor:pointer;font-size:12px;font-weight:600;background:var(--surface);color:var(--text3);transition:all .2s;font-family:inherit}
+.yr-btn.on{background:rgba(42,157,143,.25);color:#2a9d8f}
+.mo-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.mo-link{font-size:10px;background:none;border:none;cursor:pointer;font-weight:600;font-family:inherit;padding:0;color:var(--text3)}
+.mo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.mo-btn{padding:5px 0;border-radius:5px;border:none;cursor:pointer;font-size:11px;font-weight:600;background:var(--surface);color:var(--text3);transition:all .2s;font-family:inherit}
+.mo-btn.on{background:rgba(69,123,157,.25);color:#457b9d}
+.ten-search{width:100%;padding:6px 10px;border-radius:6px;border:1px solid var(--input-bd);background:var(--input-bg);color:var(--input-text);font-size:12px;margin-bottom:6px;outline:none;font-family:inherit}
+.ten-list{overflow-y:auto;max-height:340px;display:flex;flex-direction:column;gap:2px}
+.ten-item{display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:6px;cursor:pointer;transition:background .15s}
+.ten-item:hover{background:var(--surface-h)}
+.ten-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.ten-info{overflow:hidden;flex:1}
+.ten-name{font-size:11px;font-weight:500;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ten-sf{font-size:9px;color:var(--text3)}
+.cat-badge{font-size:8px;font-weight:700;padding:2px 6px;border-radius:4px;white-space:nowrap;flex-shrink:0}
+.show-more{margin-top:6px;padding:4px 0;background:none;border:none;color:#457b9d;font-size:11px;cursor:pointer;font-weight:600;font-family:inherit;width:100%}
+
+/* ── Chart Area ────────────────────────────────────────────────────────────── */
+.right{display:flex;flex-direction:column;gap:14px}
+.chart-panel{background:var(--surface2);border-radius:14px;padding:18px;border:1px solid var(--bd)}
+.ctrl-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+.ctrl-grp{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ctrl-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text4);margin-right:4px}
+.view-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--bd);cursor:pointer;font-size:11px;font-weight:600;font-family:inherit;background:var(--surface);color:var(--text3);transition:all .2s}
+.view-btn.on{border-color:var(--btn-c);background:color-mix(in srgb,var(--btn-c) 15%,transparent);color:var(--btn-c)}
+.metric-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--bd);cursor:pointer;font-size:11px;font-weight:600;font-family:inherit;background:var(--surface);color:var(--text3);transition:all .2s}
+.metric-btn.on{border-color:#e9c46a80;background:rgba(233,196,106,.18);color:#c8920a}
+
+/* ── Totals Panel ──────────────────────────────────────────────────────────── */
+.tot-panel{background:var(--surface2);border-radius:14px;padding:14px;border:1px solid var(--bd)}
+.tot-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.tot-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--pc)}
+.tot-legend{display:flex;gap:12px;font-size:9px;color:var(--text4)}
+.tot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:8px}
+.tot-card{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:all .15s;border:1px solid transparent}
+.tot-card:hover{background:var(--surface-h) !important}
+.tot-bar{width:5px;height:36px;border-radius:3px;flex-shrink:0}
+.tot-body{flex:1;overflow:hidden}
+.tot-name-row{display:flex;align-items:center;gap:5px;margin-bottom:2px}
+.tot-name{font-size:11px;font-weight:600;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tot-val{font-size:13px;font-weight:700;color:var(--text)}
+.tot-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.rev-score{text-align:center}
+.rev-score .rl{font-size:8px;color:var(--text4);margin-bottom:3px}
+.rev-score .rv{font-size:13px;font-weight:700;color:var(--text)}
+.occ-right{text-align:right}
+.occ-right .ol{font-size:8px;color:var(--text4);margin-bottom:3px}
+.occ-badge{display:inline-flex;align-items:center;gap:3px;border-radius:5px;padding:1px 5px;font-size:9px;font-weight:700}
+
+/* ── Modal ─────────────────────────────────────────────────────────────────── */
+.overlay{position:fixed;inset:0;background:var(--overlay);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--modal-bg);border-radius:16px;padding:24px;width:min(920px,100%);max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.modal-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+.modal-title-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.modal-close{background:var(--surface3);border:1px solid var(--bd);border-radius:8px;color:var(--text3);font-size:18px;cursor:pointer;padding:4px 10px;line-height:1;flex-shrink:0}
+.modal-close:hover{color:var(--text)}
+.modal-stats{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.stat-box{background:var(--surface3);border-radius:8px;padding:5px 12px;border:1px solid var(--bd)}
+.stat-l{font-size:8px;color:var(--text4);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.stat-v{font-size:14px;font-weight:700;color:var(--text)}
+.modal-body{display:flex;flex-direction:column;gap:16px}
+.chart-section{background:var(--surface);border-radius:12px;padding:14px 16px;border:1px solid var(--bd)}
+.section-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.yoy-strip{display:flex;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid var(--bd);flex-wrap:wrap}
+.yoy-chip{display:flex;align-items:center;gap:4px;background:var(--surface);border-radius:5px;padding:3px 8px}
+.yoy-yr{font-size:9px;color:var(--text4)}
+.yoy-val{font-size:9px;font-weight:700;margin-left:4px;white-space:nowrap}
+.reviews-panel{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.plat-card{background:var(--surface3);border-radius:10px;padding:14px 16px;border:1px solid var(--bd);text-align:center}
+.plat-icon{font-size:20px;margin-bottom:4px}
+.plat-name{font-size:9px;font-weight:700;color:var(--text4);text-transform:uppercase;margin-bottom:8px}
+.plat-score{display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:3px}
+.score-num{font-size:26px;font-weight:800;color:var(--text)}
+.score-star{font-size:16px;color:#e9c46a;margin-top:2px}
+.score-ct{font-size:9px;color:var(--text4)}
+.edit-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--bd)}
+.avg-score{flex:1}
+.avg-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text4);margin-bottom:4px}
+.avg-val{display:flex;align-items:baseline;gap:6px}
+.avg-num{font-size:32px;font-weight:800;color:var(--text);line-height:1}
+.edit-btn{padding:4px 12px;border-radius:6px;border:1px solid var(--bd2);background:var(--surface);color:var(--text3);font-size:10px;font-weight:600;cursor:pointer;font-family:inherit}
+.edit-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.edit-card{background:var(--surface);border-radius:10px;padding:10px 12px;border:1px solid var(--bd)}
+.edit-card-lbl{font-size:9px;font-weight:700;color:var(--text4);text-transform:uppercase;margin-bottom:8px;text-align:center}
+.edit-card input{width:100%;padding:4px 6px;border-radius:4px;border:1px solid var(--input-bd);background:var(--input-bg);color:var(--input-text);font-size:12px;text-align:center;box-sizing:border-box;font-family:inherit;outline:none;margin-bottom:4px}
+.hist-hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.hist-yr-sum{display:flex;gap:16px}
+.hist-yr{text-align:right}
+.hist-yr .hy{font-size:8px;color:var(--text4);text-transform:uppercase}
+.hist-yr .hv{font-size:12px;font-weight:700;color:var(--text2)}
+
+/* ── Misc ──────────────────────────────────────────────────────────────────── */
+.no-data{text-align:center;padding:48px 0;color:var(--text3);font-size:13px}
+#tt{position:fixed;pointer-events:none;z-index:9999;display:none;background:var(--tt-bg);border:1px solid var(--tt-bd);border-radius:10px;padding:10px 14px;min-width:160px;max-width:280px;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.ftr{text-align:center;margin-top:24px;padding-bottom:16px;color:var(--ftr);font-size:11px}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;gap:16px;color:var(--text3)}
+.empty-icon{font-size:48px;opacity:.3}
+.empty-title{font-size:16px;font-weight:600;color:var(--text3)}
+.empty-desc{font-size:12px;color:var(--text4);text-align:center;max-width:360px;line-height:1.6}
+
+/* ── Light mode SVG / inline-style overrides ───────────────────────────────── */
+body.light-mode #tt{color:#1a1a2e}
+body.light-mode .chart-section svg text{fill:#555}
+body.light-mode .chart-section svg line{stroke:rgba(0,0,0,.08)}
+body.light-mode .chart-panel svg text{fill:#555}
+body.light-mode .chart-panel svg line{stroke:rgba(0,0,0,.08)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="tt"></div>
+<script>
+// ─── CONSTANTS ───────────────────────────────────────────────────────────────
+// ▼ Set this once to your SharePoint/web URL where this file is hosted.
+//   e.g. "https://rebeesmanagement.sharepoint.com/sites/ops/Shared%20Documents/Rebees-Sales-Dashboard.html"
+//   Leave empty ('') to fall back to the saved URL or the config modal.
+const SHARE_BASE_URL = 'https://rebees-sales-tracker.netlify.app/';
+
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const CAT_COLORS = { fb:"#e63946", rt:"#457b9d", sv:"#2a9d8f" };
+const CAT_LABELS  = { fb:"Food & Beverage", rt:"Retail", sv:"Services" };
+const OCC_THRESH  = { fb:9, rt:15, sv:20 };
+const COLORS = ["#e63946","#457b9d","#2a9d8f","#e9c46a","#f4a261","#264653","#a8dadc","#d62828","#023e8a","#0077b6","#00b4d8","#90e0ef","#6a040f","#9b2226","#ae2012","#bb3e03","#ca6702","#ee9b00","#e9d8a6","#94d2bd","#0a9396","#005f73","#588157","#a3b18a","#3a5a40","#344e41","#6d6875","#b5838d","#e5989b","#ffb4a2","#ffcdb2","#8338ec","#3a86ff","#ff006e","#fb5607","#ffbe0b","#8ac926","#1982c4","#6a4c93","#f72585","#7209b7","#480ca8","#c77dff","#e0aaff","#06d6a0","#118ab2"];
+const fmt     = v => v>=1e6?'$'+(v/1e6).toFixed(1)+'M':v>=1e3?'$'+(v/1e3).toFixed(0)+'K':'$'+Math.round(v);
+const fmtFull = v => '$'+Math.round(v).toLocaleString();
+const fmtPct  = v => v.toFixed(1)+'%';
+const esc     = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+// ─── PROPERTY CONFIG ─────────────────────────────────────────────────────────
+const PROP_CONFIG = [
+  {id:"autry",       label:"Autry Park",            color:"#e63946"},
+  {id:"rice",        label:"Rice Village",           color:"#457b9d"},
+  {id:"stls",        label:"Sugar Land Town Square", color:"#2a9d8f"},
+  {id:"greenstreet", label:"Greenstreet",            color:"#e9c46a"},
+  {id:"henderson",   label:"Henderson Ave",          color:"#8338ec"},
+];
+
+// ═════════════════════════════════════════════════════════════════════════════
+// AUTRY PARK DATA — Last updated: April 2026
+// ═════════════════════════════════════════════════════════════════════════════
+const AUTRY_RENT = {"Annabelle's":{basePSF:59.39,nnnPSF:20.0},"Turner's Cut":{basePSF:73.57,nnnPSF:20.0},"Annam":{basePSF:58.0,nnnPSF:20.0},"Mayahuel":{basePSF:51.2,nnnPSF:20.0},"Lick Honest Ice Cream":{basePSF:57.0,nnnPSF:20.0},"Doko":{basePSF:45.0,nnnPSF:20.0},"Bar Doko":{basePSF:45.0,nnnPSF:20.0},"Sloan Hall":{basePSF:1.8,nnnPSF:20.0},"South to North":{basePSF:1.0,nnnPSF:20.0},"SweatHouz":{basePSF:0.0,nnnPSF:20.0},"Coma":{basePSF:55.0,nnnPSF:20.0},"Duo Coffee + Fitness":{basePSF:50.0,nnnPSF:20.0}}
+const AUTRY_REVIEWS = {"Annabelle's":{google:{score:4.2,count:null},opentable:{score:4.5,count:null},resy:{score:null,count:null},yelp:{score:3.8,count:null}},"Turner's Cut":{google:{score:4.6,count:null},opentable:{score:4.7,count:null},resy:{score:null,count:null},yelp:{score:4.6,count:null}},"Annam":{google:{score:4.7,count:null},opentable:{score:4.8,count:null},resy:{score:null,count:null},yelp:{score:4.5,count:null}},"Mayahuel":{google:{score:4.5,count:null},opentable:{score:4.6,count:null},resy:{score:null,count:null},yelp:{score:3.4,count:null}},"Lick Honest Ice Cream":{google:{score:4.6,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.4,count:null}},"Doko":{google:{score:4.6,count:null},opentable:{score:4.8,count:null},resy:{score:null,count:null},yelp:{score:4.7,count:null}},"Bar Doko":{google:{score:4.6,count:null},opentable:{score:4.8,count:null},resy:{score:null,count:null},yelp:{score:4.0,count:null}},"Sloan Hall":{google:{score:5.0,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.6,count:null}},"South to North":{google:{score:4.8,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:5.0,count:null}},"SweatHouz":{google:{score:4.9,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:5.0,count:null}},"Coma":{google:{score:4.9,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.5,count:null}},"Duo Coffee + Fitness":{google:{score:4.2,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.3,count:null}}}
+const AUTRY_TENANTS = [{n:"Annabelle\'s",u:"",a:5522,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,715630,1000747]},{yr:2024,m:[623670,694399,693180,600439,682319,559008,418754,661910,561047,446173,538343,948731]},{yr:2025,m:[454778,598724,469402,437385,531499,391181,304509,615905,367255,357491,417015,821279]},{yr:2026,m:[354997,484499,376257,380658,0,0,0,0,0,0,0,0]}]},{n:"Turner\'s Cut",u:"",a:5437,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,32539,241170,383041,345814,413907,385022,520411]},{yr:2025,m:[394275,468027,363609,365919,397385,295197,247841,358508,311465,336229,316737,534285]},{yr:2026,m:[316223,395657,321275,323674,0,0,0,0,0,0,0,0]}]},{n:"Annam",u:"",a:3500,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[0,58874,93685,96361,101142,0,94640,103188,84416,92819,120837,147201]},{yr:2026,m:[115190,115806,118591,0,0,0,0,0,0,0,0,0]}]},{n:"Mayahuel",u:"",a:3591,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[0,0,0,0,0,0,134486,243676,190611,161571,118242,127376]},{yr:2026,m:[130489,116264,0,0,0,0,0,0,0,0,0,0]}]},{n:"Lick Honest Ice Cream",u:"",a:556,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,8146,8535,7132,0,0,0,0,0]},{yr:2025,m:[3883,5286,10106,9449,11128,11405,9637,10226,9498,10626,7934,9018]},{yr:2026,m:[7391,9457,11366,10713,0,0,0,0,0,0,0,0]}]},{n:"Doko",u:"",a:1921,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[47351,148632,204772,184952,233205,218529,154760,257067,151359,169539,166548,166331]},{yr:2026,m:[143457,144006,133571,0,0,0,0,0,0,0,0,0]}]},{n:"Bar Doko",u:"",a:602,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[78274,53416,48258,44205,45629,38090,36973,37388,28981,28066,26393,30424]},{yr:2026,m:[30981,32387,28959,0,0,0,0,0,0,0,0,0]}]},{n:"Sloan Hall",u:"",a:973,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,3396,7225]},{yr:2025,m:[410,1228,175,423,471,4310,2033,1212,7235,485,6601,3500]},{yr:2026,m:[618,7627,0,0,0,0,0,0,0,0,0,0]}]},{n:"South to North",u:"",a:1521,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,17510,29637,37098]},{yr:2025,m:[12091,42096,31048,20560,15644,17840,8549,7825,19175,21806,13269,19596]},{yr:2026,m:[22066,34965,8608,23452,0,0,0,0,0,0,0,0]}]},{n:"SweatHouz",u:"",a:2150,c:"sv",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[0,0,0,0,0,0,0,0,0,0,0,39671]},{yr:2026,m:[58580,63657,63896,66858,0,0,0,0,0,0,0,0]}]},{n:"Coma",u:"",a:1829,c:"sv",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,54290,76902,104226,78158,80029,94260,0,124989,114632,114411]},{yr:2025,m:[123591,110598,134168,135187,122334,122639,153789,128598,109706,114858,111017,134901]},{yr:2026,m:[146354,123031,151214,0,0,0,0,0,0,0,0,0]}]},{n:"Duo Coffee + Fitness",u:"",a:4216,c:"sv",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,79630]},{yr:2025,m:[88277,95536,118714,127261,140954,121879,138379,139827,133748,140217,137242,136322]},{yr:2026,m:[128027,127203,0,0,0,0,0,0,0,0,0,0]}]}]
+// ─── PLACEHOLDER DATA ─────────────────────────────────────────────────────────
+const RICE_RENT = {"Altar'd State":{basePSF:70.0,nnnPSF:42.08},"Ann Taylor Loft":{basePSF:42.92,nnnPSF:38.36},"Athleta":{basePSF:58.36,nnnPSF:32.71},"Badolina Bakery & Café":{basePSF:67.21,nnnPSF:10.84},"Banana Republic":{basePSF:46.82,nnnPSF:27.66},"Birkenstock":{basePSF:46.35,nnnPSF:35.36},"Black Walnut Café":{basePSF:58.37,nnnPSF:31.12},"Blue Mercury":{basePSF:74.98,nnnPSF:38.63},"Bluestone Lane":{basePSF:70.0,nnnPSF:31.45},"CB2":{basePSF:41.8,nnnPSF:22.18},"Clique Salon":{basePSF:66.54,nnnPSF:31.86},"D'Amico Italian Market":{basePSF:48.74,nnnPSF:34.77},"Drybar":{basePSF:78.74,nnnPSF:131.42},"Duck Camp":{basePSF:68.91,nnnPSF:31.27},"Fig":{basePSF:62.5,nnnPSF:29.68},"Glow 30":{basePSF:38.0,nnnPSF:35.58},"Golden Gray":{basePSF:24.0,nnnPSF:157.71},"Gorjana":{basePSF:68.89,nnnPSF:31.8},"Hamsa":{basePSF:65.66,nnnPSF:10.65},"Hopdoddy":{basePSF:53.61,nnnPSF:36.19},"Hudson House":{basePSF:53.02,nnnPSF:30.8},"Jeni's Ice Cream":{basePSF:55.0,nnnPSF:10.92},"Krewe Optic":{basePSF:37.08,nnnPSF:29.89},"Lily Rain":{basePSF:67.53,nnnPSF:31.4},"Love Sac":{basePSF:68.98,nnnPSF:33.7},"Lululemon":{basePSF:67.6,nnnPSF:31.92},"Luminary":{basePSF:72.78,nnnPSF:31.92},"MAC Cosmetics":{basePSF:73.61,nnnPSF:34.59},"Madison Reed":{basePSF:73.55,nnnPSF:33.46},"Mendocino Farms":{basePSF:57.43,nnnPSF:31.43},"Mizzen + Main":{basePSF:67.56,nnnPSF:31.18},"Navy Blue":{basePSF:36.41,nnnPSF:31.57},"On Running":{basePSF:25.0,nnnPSF:35.84},"Paper Source":{basePSF:66.0,nnnPSF:30.66},"Parker Joe":{basePSF:60.0,nnnPSF:29.88},"Rice Box":{basePSF:60.15,nnnPSF:19.76},"Sephora":{basePSF:65.0,nnnPSF:31.83},"Shake Shack":{basePSF:88.67,nnnPSF:39.77},"Sixty Vines":{basePSF:49.05,nnnPSF:34.83},"Solidcore":{basePSF:49.94,nnnPSF:31.7},"Studs":{basePSF:68.1,nnnPSF:32.23},"Sugared + Bronzed":{basePSF:50.0,nnnPSF:27.53},"Sunglass Hut":{basePSF:89.15,nnnPSF:35.1},"TASC Performance":{basePSF:62.0,nnnPSF:30.92},"Tecovas":{basePSF:70.95,nnnPSF:36.04},"The Beaufort Bonnet":{basePSF:69.01,nnnPSF:31.08},"Van Leeuwen Ice Cream":{basePSF:64.94,nnnPSF:33.72},"Vuori":{basePSF:64.36,nnnPSF:30.93},"Warby Parker":{basePSF:57.0,nnnPSF:34.58},"White House Black Market":{basePSF:48.0,nnnPSF:37.52}};
+const RICE_REVIEWS = {"Altar'd State":{google:{score:null,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.1,count:null}},"Ann Taylor Loft":{google:{score:4.0,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:5.0,count:null}},"Athleta":{google:{score:3.9,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.1,count:null}},"Badolina Bakery & Café":{google:{score:4.3,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.2,count:null}},"Banana Republic":{google:{score:4.2,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.2,count:null}},"Birkenstock":{google:{score:null,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.8,count:null}},"Black Walnut Café":{google:{score:4.4,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.2,count:null}},"Blue Mercury":{google:{score:4.0,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:2.8,count:null}},"Bluestone Lane":{google:{score:4.3,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.9,count:null}},"CB2":{google:{score:3.1,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.6,count:null}},"Clique Salon":{google:{score:4.9,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.6,count:null}},"D'Amico Italian Market":{google:{score:4.3,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.1,count:null}},"Drybar":{google:{score:4.0,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.0,count:null}},"Duck Camp":{google:{score:4.6,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:5.0,count:null}},"Fig":{google:{score:null,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.5,count:null}},"Glow 30":{google:{score:4.8,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.6,count:null}},"Golden Gray":{google:{score:4.3,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:5.0,count:null}},"Gorjana":{google:{score:4.4,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.1,count:null}},"Hamsa":{google:{score:4.0,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.3,count:null}},"Hopdoddy":{google:{score:4.4,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.2,count:null}},"Hudson House":{google:{score:4.7,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.0,count:null}},"Jeni's Ice Cream":{google:{score:4.2,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:2.8,count:null}},"Krewe Optic":{google:{score:5.0,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.7,count:null}},"Lily Rain":{google:{score:4.1,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.2,count:null}},"Love Sac":{google:{score:4.8,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.7,count:null}},"Lululemon":{google:{score:3.8,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:5.0,count:null}},"Luminary":{google:{score:3.3,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.5,count:null}},"MAC Cosmetics":{google:{score:4.4,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.9,count:null}},"Madison Reed":{google:{score:4.1,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.0,count:null}},"Mendocino Farms":{google:{score:4.5,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.2,count:null}},"Mizzen + Main":{google:{score:5.0,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:5.0,count:null}},"Navy Blue":{google:{score:4.6,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.1,count:null}},"On Running":{google:{score:4.4,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.0,count:null}},"Paper Source":{google:{score:3.7,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.2,count:null}},"Parker Joe":{google:{score:5.0,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.5,count:null}},"Rice Box":{google:{score:4.1,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.3,count:null}},"Sephora":{google:{score:4.1,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.2,count:null}},"Shake Shack":{google:{score:4.2,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.4,count:null}},"Sixty Vines":{google:{score:4.6,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.4,count:null}},"Solidcore":{google:{score:3.6,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.4,count:null}},"Studs":{google:{score:4.7,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:5.0,count:null}},"Sugared + Bronzed":{google:{score:4.7,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.2,count:null}},"Sunglass Hut":{google:{score:3.5,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.1,count:null}},"TASC Performance":{google:{score:4.5,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.8,count:null}},"Tecovas":{google:{score:4.4,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.8,count:null}},"The Beaufort Bonnet":{google:{score:5.0,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.1,count:null}},"Van Leeuwen Ice Cream":{google:{score:4.7,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.2,count:null}},"Vuori":{google:{score:4.0,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.0,count:null}},"Warby Parker":{google:{score:4.8,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.0,count:null}},"White House Black Market":{google:{score:3.9,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:5.0,count:null}}};
+const RICE_TENANTS = [{n:"Altar\'d State",u:"",a:5622,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[92069,71802,159711,183773,213862,192423,200002,202349,173797,208897,285199,333696]},{yr:2022,m:[133106,168197,236855,240118,245467,199720,168608,202006,185028,181884,248395,309706]},{yr:2023,m:[137522,180138,230501,247850,231842,195245,177557,176575,159059,171904,239742,301031]},{yr:2024,m:[116428,183162,269032,207329,261857,226244,200815,238144,169687,178560,293351,275737]},{yr:2025,m:[144054,199453,314437,316880,358019,294559,255276,255948,196458,208298,324619,335719]},{yr:2026,m:[190629,280348,408973,309031,0,0,0,0,0,0,0,0]}]},{n:"Ann Taylor Loft",u:"",a:6166,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[7037,21961,69215,59293,85111,94515,55037,43068,72863,71819,78636,101129]},{yr:2022,m:[53248,74584,131297,118482,131610,145109,112012,106031,147919,126579,135858,163328]},{yr:2023,m:[95353,109500,152862,144525,158071,161960,111658,86169,141549,111238,133526,173686]},{yr:2024,m:[108882,114005,172772,132178,147155,159532,87007,105813,151441,114420,132780,158532]},{yr:2025,m:[82936,106981,156306,138035,150309,162495,118827,115460,161195,118668,151003,166283]},{yr:2026,m:[83744,100143,170363,129917.44,152579,0,0,0,0,0,0,0]}]},{n:"Athleta",u:"",a:4014,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[184064,166265,352657,256052,285355,353495,221688,193813,225176,182866,234687,288861]},{yr:2022,m:[162598,170782,255142,180626,233649,259949,162491,161567,200263,158782,186866,268833]},{yr:2023,m:[135952,136952,228646,178499,214533,258323,154780,144094,174585,144844,192898,280244]},{yr:2024,m:[182755,142846,218546,184878,191739,230452,122435,113508,176877,130459,181349,277032]},{yr:2025,m:[129654,135865,203297,154455,170461,196606,148047,123955,156300,122094,166415,234257]},{yr:2026,m:[110241,132142,205077,0,0,0,0,0,0,0,0,0]}]},{n:"Badolina Bakery & Café",u:"",a:1512,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[65067,89311,80601,68395,77541,65066.51,89311.01,80600.87,68395.25,77540.77,72311.5,72676.75]},{yr:2022,m:[71351,69815,84118,87048,94155.59,86116,86915,84265,84874,92129,86914,94957]},{yr:2023,m:[85573,86439,88296,94021,93637,83444,88667,81652,81282,82141,87124.8,96946]},{yr:2024,m:[72313,83116,92896,80292,73324,74094,65160,75382,66254,81208,79134,78471]},{yr:2025,m:[65169,71206,80695,78523,83824,64227,69026,62217,59642,67176,78903,76004]},{yr:2026,m:[67944,69822,66927,75168.5,76625,0,0,0,0,0,0,0]}]},{n:"Banana Republic",u:"",a:6500,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[94998,75726,167613,133762,171664,178454,128980,116164,144505,135454,169395,206104]},{yr:2022,m:[106878,122737,204287,171820,202239,202286,134884,144091,185837,145625,169084,192608]},{yr:2023,m:[86629,115303,171792,144360,181924,173619,134816,126965,157900,114362,154048,211925]},{yr:2024,m:[132643,127204,187140,153760,151967,140578,98000,117384,165989,118443,175899,226102]},{yr:2025,m:[94721,117029,213099,124658,171151,165460,110862,118827,182187,145760,187561,255329]},{yr:2026,m:[122183,167936,281589,0,0,0,0,0,0,0,0,0]}]},{n:"Birkenstock",u:"",a:2807,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[0,0,0,0,0,571707,0,0,770774,0,0,815611]},{yr:2026,m:[0,0,554894,0,0,0,0,0,0,0,0,0]}]},{n:"Black Walnut Café",u:"",a:3742,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[193111,150667,233960,264806,301980,290099,291802,278280,285791,307867,293054,282838]},{yr:2022,m:[292991,277070,341650,331910,361812,318012,315257,310242,313000,344947,315677,286769]},{yr:2023,m:[326416,318983,344943,346591,313913,294683,108012,0,0,194361,292793,301568]},{yr:2024,m:[291837,296291,354643,309194,348873,287339,287743,316092,294563,271547,288617,265895]},{yr:2025,m:[236461,260275,297727,299058,342985,324682,366233,342429,288712,317906,332788,318877]},{yr:2026,m:[294606,271474,383701,350660.36,0,0,0,0,0,0,0,0]}]},{n:"Blue Mercury",u:"",a:2454,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[85058,84803,140687,102430,102022,178026,123705,116853,157537,119845,127848,218054]},{yr:2022,m:[110248,114367,155816,113830,129583,181076,102453,108960,170987,128296,141409,230503]},{yr:2023,m:[113413,138126,175653,142649,127929,192919,116572,123295,182653,126643,161824,224309]},{yr:2024,m:[164257,136857,177619,152462,135408,225517,95585,125058,201784,131447,170589,206775]},{yr:2025,m:[116600,131626,163100,131870,118486,175352,106795,106104,173317,121590,177936,225284]},{yr:2026,m:[127096,146376,180711,114453.23,130959,0,0,0,0,0,0,0]}]},{n:"Bluestone Lane",u:"",a:2566,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,89308,156530.5,144314,133891,120772,120428,108070,113359,114029,107882,108706]},{yr:2024,m:[103218,96629,115467,109120,115663,109506,94511,102361,98113,102336,96737,92821]},{yr:2025,m:[80524,93415,114342,109980,133413,117176,116769,117745,111039,122811,134415,128534]},{yr:2026,m:[131251,120465,149911,141239.56,146279,0,0,0,0,0,0,0]}]},{n:"CB2",u:"",a:10084,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[104031,177921,204161,306002,297679,104030.81,177920.71,204160.85,306002.4,297678.97,387511.43,375112.52]},{yr:2022,m:[341893,305094,391056.7,356982,332418,536533,447737,382832,496246,344782,371268,408821]},{yr:2023,m:[235523,195867,225397,180767,243627,266534,232169,263994,338879,303342,434904,483227]},{yr:2024,m:[231053,306934,406375,316911,382513,548996,276962,328035,414570,430506,464273,481544]},{yr:2025,m:[226075,390454,411285,354326,344126,401081,315198,306856,436119,366672,448079,396046]},{yr:2026,m:[299896,304022,331316,272104.76,0,0,0,0,0,0,0,0]}]},{n:"Clique Salon",u:"",a:2157,c:"sv",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[129397,113918,163306,180156,153210,165373,165023,154936,149938,174349,174317,180725]},{yr:2022,m:[164441,156442,187293,186965,196440,198355,170677,212681,171907,188509,191434,213194]},{yr:2023,m:[188121,183589,222437,205480,226562,223191,171800,229855,210718,209026,229218,224998]},{yr:2024,m:[219839,220315,228405,232553,224607,219599,187954,227247,208211,221589,228561,232681]},{yr:2025,m:[220270,220192,229224,245043,254243,217112,211094,223115,210087,222349,228150,230421]},{yr:2026,m:[210202,216368,231150,233110,229329,0,0,0,0,0,0,0]}]},{n:"D\'Amico Italian Market",u:"",a:3104,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[174028,139483,211056,223792,231654,232667,233909,222364,221836,236741,233341,255275]},{yr:2022,m:[229595,230512,279439,257009,263266,194637,233572,228738,231908,261169,241892,279041]},{yr:2023,m:[243986,235010,264195,256322.85,246450,218005,214233,197840,197926,213809,205294,240493]},{yr:2024,m:[196719,205427,224503,226145,205644,211768,181617,220517,206599,225533,235247,247000]},{yr:2025,m:[202401,215983,248389,228017,251770,227767,201597,221160,221018,236331,246082,238348]},{yr:2026,m:[216240,215819,253633,229899.62,251457,0,0,0,0,0,0,0]}]},{n:"Drybar",u:"",a:1800,c:"sv",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[13334,14210,35060,24580,25446,25857,34529,25600,30709,37850,37426,51109]},{yr:2022,m:[36567,45642,50664,52767,54374,38496,37518,40587,44924,54719,59614,87698]},{yr:2023,m:[55807,56319,50714,65835,66512,52232,48875,49718,63811,52294,44133,57102]},{yr:2024,m:[49952,64691,69729,70352,62155,47629,43412,52267,52445,65382,72224,75077]},{yr:2025,m:[56366,64949,66111,65197,66808,56018,48912,57305,64702,78593,81544,93486]},{yr:2026,m:[67787,72620,71079,63333.32,65425,0,0,0,0,0,0,0]}]},{n:"Duck Camp",u:"",a:1455,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[90253,87196,108077,129289,0,0,0,0,90253,87196,108077,129289]},{yr:2022,m:[63191,41778,52099,31535,43380,50603,46713,65595,61946,49156,77786,117986]},{yr:2023,m:[37904,35421,40761,40037,36000,39000,39000,51000,57981,50491,75253,98789]},{yr:2024,m:[48856,37393,47854,37757,40428,62247,43969,50706,49651,52978,68242,107348]},{yr:2025,m:[44069,21709,32124,24460,32098,35774,32867,44482,39008,40410,50463,78557]},{yr:2026,m:[29438,19601,29484,17171.27,0,0,0,0,0,0,0,0]}]},{n:"Fig",u:"",a:3147,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[0,0,0,0,0,0,0,0,0,0,0,361022]},{yr:2026,m:[0,0,984163,0,0,0,0,0,0,0,0,0]}]},{n:"Glow 30",u:"",a:1174,c:"sv",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[0,0,0,0,0,0,1556,17100,17558,12497,15511,17282]},{yr:2026,m:[0,0,21560,0,0,0,0,0,0,0,0,0]}]},{n:"Golden Gray",u:"",a:1500,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[0,0,0,0,0,0,0,0,0,0,0,11835]},{yr:2026,m:[26102,41912,67320,45086.07,55722,0,0,0,0,0,0,0]}]},{n:"Gorjana",u:"",a:1386,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,71399,67555,72246,128626,69103,71740,89531,73583,94354,86722,254227]},{yr:2025,m:[96197,98976,94720,94091,171143,132324,117008,119757,88362,94173,112378,267841]},{yr:2026,m:[86312,103407,114779,116393.24,173836,0,0,0,0,0,0,0]}]},{n:"Hamsa",u:"",a:4680,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,235501,411613,404015,349472,320671,312456,302289,366754]},{yr:2023,m:[313996.46,345208,370686,374566,362145,330712,292830,368976,294881,256163,279121,304327]},{yr:2024,m:[284755,345876,334829,310999,297242,294230,230788,338577,280708,288984,279461,299587]},{yr:2025,m:[258233,302068,333104,318401,351007,277288,242364,326004,238613,272204,267127,317742]},{yr:2026,m:[255480,281945,287346,363339.23,0,0,0,0,0,0,0,0]}]},{n:"Hopdoddy",u:"",a:3872,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[222407,179065,231472,295020,239282,233779,276221,226719,214638,295718,229355,243348]},{yr:2022,m:[286135,248910,278619,351147,262142,236879,286188,243140,263915,338880,313438,257092]},{yr:2023,m:[334684,285497,297903,358996,270780,263310,293855,251788,253617,329519,246606,263389]},{yr:2024,m:[315603,273188,290584,362887,245580,254599,272530,234266,234266,303148,238008,215169]},{yr:2025,m:[318122,259808,253331,339082,250773,246520,287292,230940,244790,329829,251665,308710]},{yr:2026,m:[303630,0,289538,343184,0,0,0,0,0,0,0,0]}]},{n:"Hudson House",u:"",a:6444,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[0,0,0,0,185851,525982,446980,467257,405768,430475,469902,613969]},{yr:2026,m:[568535,551955,653062,609869,833486,0,0,0,0,0,0,0]}]},{n:"Jeni\'s Ice Cream",u:"",a:2000,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[0,0,0,0,57218,68460,78702,61613,57515,68812,51992,50802]},{yr:2026,m:[65756,71004,83458,105796.08,0,0,0,0,0,0,0,0]}]},{n:"Krewe Optic",u:"",a:941,c:"sv",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,39856,43397,38347,32238,40493,33000,43397]},{yr:2022,m:[32151,40329,51726,53193,61835,47710,51988,40822,46900,41304,40335,51998]},{yr:2023,m:[46353,43717,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,12778,60464]},{yr:2025,m:[32268,42363,92797,56723,74682,72071,68965,52608,32816,66718,45168,67030]},{yr:2026,m:[35796,56761,77993,92590,0,0,0,0,0,0,0,0]}]},{n:"Lily Rain",u:"",a:2150,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[46093,38109,76036,68342,82433,74540,66556,59849,62913,68019,70520,92289]},{yr:2022,m:[37334,57081,78991,76104,82680,61525,53692,62173,65322,69821,66642,111752]},{yr:2023,m:[41946,59228,66491,82022,85119,70298,67820,65164,72322,68463,78803,110252]},{yr:2024,m:[47565,64786,65746,68078,73802,67746,47133,34599,59666,59074,63176,80374]},{yr:2025,m:[27266,51730,74707,56092,74214,59845,50140,51842,50715,54353,57924,83045]},{yr:2026,m:[33716,54008,76048,44956,47013,0,0,0,0,0,0,0]}]},{n:"Love Sac",u:"",a:801,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,54661,83363,108972,199762,302400,302400,240422]},{yr:2022,m:[195419,152230,145050,121941,192125,252850,122005,132315,279087,151228,308576,260510]},{yr:2023,m:[65528,138270,174278,126634,187885,223457,147363,96380,170635,92371,168878,175546]},{yr:2024,m:[115426,61068,176174,93213,217747,134859,64364,73577,129052,72337,161620,138461]},{yr:2025,m:[71962,45354,93182,126901,69719,115528,162061,70938,64827,98920,31484,113177]},{yr:2026,m:[165951,56243,86201.27,72533.57,0,0,0,0,0,0,0,0]}]},{n:"Lululemon",u:"",a:4600,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,430993,976780]},{yr:2024,m:[319674,406043,537312,447695,452770,640933,448489,475889,492643,435066,421704,1044460]},{yr:2025,m:[573302.9,447182.51,562864,458035,512465,676292,476627,503396,572634,446919,536249,1207222]},{yr:2026,m:[336598,452138,643760,423987,0,0,0,0,0,0,0,0]}]},{n:"Luminary",u:"",a:2311,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,34934,77210]},{yr:2024,m:[30284,38837,64854,47401,51457,52685,34113,46951,45776,41850,47492,66816]},{yr:2025,m:[22030,31406,45013,34589,41829,36096,32764,29881,39649,45577,36327,61476]},{yr:2026,m:[25266.38,0,34914.2,44450.4,0,0,0,0,0,0,0,0]}]},{n:"MAC Cosmetics",u:"",a:1400,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[40741,30534,39216,40101,51742,49878,49225,45432,49066,51481,50187,62200]},{yr:2022,m:[39756,44993,52225,51641,49102,45112,45345,45835,47553,50146,53178,55315]},{yr:2023,m:[45535,46188,50969,47060,50021,42862,44636,42979,46767,45030,51982,152921]},{yr:2024,m:[35471,43119,44524,44099,41882,40991,33992,38540,38999,44038,46631,50249]},{yr:2025,m:[38770,41960,42924,41566,40711,41955,43440,38607,40586,43616,48539,52644]},{yr:2026,m:[38462,38901,42321,42736,42990,0,0,0,0,0,0,0]}]},{n:"Madison Reed",u:"",a:1309,c:"sv",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[28731,22706,35140,34325,38520,40005,41264,44170,41488,45492,52865,54874]},{yr:2022,m:[45473,49868,56414,58002,64102,55222,51692,56391,58194,63128,56867,57977]},{yr:2023,m:[61318,52085,59355,55814,55423,54336,55980,62346,59647,62567,55352,63322]},{yr:2024,m:[59387,61740,68745,66811,74706,64648,62513,66907,67296,71462,70310,73785]},{yr:2025,m:[72809,71066,80867,83936,83282,82376,80097,82999,85343,90511,88337,91984]},{yr:2026,m:[92238,88900,97331,0,0,0,0,0,0,0,0,0]}]},{n:"Mendocino Farms",u:"",a:3185,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[135383,101060,162227,169579,170032,168550,157111,156710,155600,173345,169180,158349]},{yr:2022,m:[142600,133856,180988,189314,159893,161307,150602,166237,160011,182420.27,158122,140882]},{yr:2023,m:[161793,159403,184509,145702,185830,163735,165507,173117,174843,175482,162543,149000]},{yr:2024,m:[159892,186698,179610,195148,186598,194411,152412,176127,204418,216142,174151,177310]},{yr:2025,m:[144358,190358,232524,220407,194676,170077,167378,206083,176524,207451,183562,167970]},{yr:2026,m:[176632,192968,209634,264535.69,212092,0,0,0,0,0,0,0]}]},{n:"Mizzen + Main",u:"",a:1608,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,48656,73156]},{yr:2024,m:[30263,47804,71872,78936,82966,80692,39437,51344,43111,53563,59091,89342]},{yr:2025,m:[29977,43089,52020,69299,88367,81399,59260,64211,61087,93165,94043,132239]},{yr:2026,m:[63043,48730,81876,89346,109125,0,0,0,0,0,0,0]}]},{n:"Navy Blue",u:"",a:7142,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,179270,787746]},{yr:2023,m:[748778,794811,845363,781988,723194,708464,599288,614872,549841,539826,527899,715106]},{yr:2024,m:[472727,499604,484717,459282,558421,441275,340069,466966,390542,344456,481080,458652]},{yr:2025,m:[315587,377213,343848,489075,425234,374676,313432,474069,310611,358758,353381,478073]},{yr:2026,m:[343318,418376,321778,415244.82,0,0,0,0,0,0,0,0]}]},{n:"On Running",u:"",a:4402,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[0,0,0,0,0,0,0,0,538092,0,0,1306668]},{yr:2026,m:[0,0,1224262,0,0,0,0,0,0,0,0,0]}]},{n:"Paper Source",u:"",a:1995,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,4159,0,0,99816,0,0,244890]},{yr:2025,m:[0,0,138508,0,0,159021,0,0,129086,0,0,287382]},{yr:2026,m:[0,0,162109,0,0,0,0,0,0,0,0,0]}]},{n:"Parker Joe",u:"",a:1976,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[0,0,0,0,29510,23239,22818,30161,35436,43553,46451,56632]},{yr:2026,m:[25923,41458,53902,41999.01,46485,0,0,0,0,0,0,0]}]},{n:"Rice Box",u:"",a:3824,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[132628,350276,447956,434622,405040,405976,412109,359610,362137,360318,370722,408799]},{yr:2024,m:[402484,398163,438457,394907,385177,380186,394858,410785,392347,428401,410548,395356]},{yr:2025,m:[354816,319969,358987,347424,357199,356691,343747,369119,347122,346101,336061,343690]},{yr:2026,m:[344485,331971,331971,347837,0,0,0,0,0,0,0,0]}]},{n:"Sephora",u:"",a:5089,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[385914,334171,516444,573950,555191,533845,529846,505609,480154,510845,636802,828781]},{yr:2022,m:[510337,558853,631366,751256,688547,606729,607597,630391,641841,730394,728941,1013929]},{yr:2023,m:[726049,695717,817398,1013929,841345,757071,763006,762806,773904,820482,847913,1256410]},{yr:2024,m:[728497,733336,807817,945074,755974,737898,649532,760616,677192,677875,923896,1097298]},{yr:2025,m:[573303,672635,731980,839332,766483,687853,688688,695189,691792,742449,929071,1207222]},{yr:2026,m:[648970,675788,765811,906147.09,758700,0,0,0,0,0,0,0]}]},{n:"Shake Shack",u:"",a:3000,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[239467,199546,326481,230556,264763,337229,253030,264743,251194,216616,275532,328197]},{yr:2022,m:[248846,246477,321996,241452,244069,309337,235439,229148,290765,250180,264734,314852]},{yr:2023,m:[263404,256094,334796,279413,261605,360061,259525,247251,295819,251118,256184,302122]},{yr:2024,m:[240438,244521,336802,279366,280549,337760,287350,260610,384533,336422,316607,398582]},{yr:2025,m:[283332,299516,386915,310356,316701,392898,316044,312543,350092,323421,330508,516840]},{yr:2026,m:[319464,350114,477249,359638.41,375853,0,0,0,0,0,0,0]}]},{n:"Sixty Vines",u:"",a:8703,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[485747,429953,571830,620527,692775,687457,680816,599699,585235,634300,642386,717626]},{yr:2022,m:[571152,592158,627732,617874,682034,612696,640701,652532,622933,631058,614210,811999]},{yr:2023,m:[631794,671366,669877,701366,712510,638100,632496,612275,623732,582422,611013,792049]},{yr:2024,m:[578890,652362,685528,639183,707549,649604,521212,638074,584213,561749,614716,771193]},{yr:2025,m:[552195,633078,660163,619457,763961,669098,566415,598916,555700,623730,623752,756691]},{yr:2026,m:[596285,682953,669146,636818.59,803854,0,0,0,0,0,0,0]}]},{n:"Solidcore",u:"",a:2317,c:"sv",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,12255,33144,36556,45255,53177,57753,57306,51443,57984,59928,69587]},{yr:2024,m:[92408,94221,101507,102877,107591,120611,131835,139992,121276,119833,121821,142243]},{yr:2025,m:[154401,148567,172044,172663,178450,175658,168499,164551,154052,158594,154613,188466]},{yr:2026,m:[185807,176228,192565,185829,0,0,0,0,0,0,0,0]}]},{n:"Studs",u:"",a:1113,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,47636,110992,135611]},{yr:2023,m:[133771,113595,128967,132261,138741,129811,134453,131869,136203,119438,119902,129288]},{yr:2024,m:[107763,124775,155096,128893,142702,155210,138099,151764,123994,122241,125411,160241]},{yr:2025,m:[144386,141955,157174,116652,134228,122393,125441,119360,95095,95284,109160,113324]},{yr:2026,m:[110337,96615,115841,116312,116381,0,0,0,0,0,0,0]}]},{n:"Sugared + Bronzed",u:"",a:1636,c:"sv",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2026,m:[0,1338,17083,24877.18,24779,0,0,0,0,0,0,0]}]},{n:"Sunglass Hut",u:"",a:1035,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[26987,27825,60419,57008,88229,84622,75761,62460,49761,50025,51846,83344]},{yr:2022,m:[35682,47989,72870,65493,81283,84593,72016,53209,44135,53174,40316,69726]},{yr:2023,m:[45662,33944,68111,74873,73442,76998,64472,45922,44514,41449,33436,73593]},{yr:2024,m:[31491,46439,71184,56989,49211,61999,46560,51532,38189,40555,36536,62907]},{yr:2025,m:[21587,44184,65700,58736,79297,81311,61957,58526,46373,50427,61494,92094]},{yr:2026,m:[32228,63184,95506,0,0,0,0,0,0,0,0,0]}]},{n:"TASC Performance",u:"",a:1455,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[25947,30608,51673,50362,64337,60303,50822,47927,46608,60631,71826,118692]},{yr:2022,m:[48233,53146,72289,72081,82365,88992,66744,68134,60665,68725,78713,121043]},{yr:2023,m:[51718,56784,64443,68718,70104,71196,63677,48605,49247,56239,66512,98672]},{yr:2024,m:[31921,44703,46515,42722,50621,59098,42630,40850,33063,38703,49092,79988]},{yr:2025,m:[25057,37927,49051,42278,54642,49071,41730,44173,47898,44173,45545,72931]},{yr:2026,m:[21480,32518,35500,29300,0,0,0,0,0,0,0,0]}]},{n:"Tecovas",u:"",a:3500,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[254879,192946,260488,274566,275369,301058,267137,273046,301115,431854,609368,835161]},{yr:2022,m:[456294,548287,602194,407919,356383,359530,320700,381972,489593,483015,653949,896084]},{yr:2023,m:[420559,599091,558018,395861,342818,289311,262892,271584,342078,408733,602162,717726]},{yr:2024,m:[350852,729522,657370,344361,357000,337976,295785,396607,392587,493839,676181,852079]},{yr:2025,m:[405165,798479,831619,361291,439699,485509,305076,428672,423365,530724,765474,920852]},{yr:2026,m:[533132,920786,936904,510862.85,0,0,0,0,0,0,0,0]}]},{n:"The Beaufort Bonnet",u:"",a:1572,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,44681,58245,55525,47189,54594,61819,62960]},{yr:2025,m:[38659,57157,69653,69586,46773,45291,57940,67591,52904,60133,56083,61476]},{yr:2026,m:[38875,62703,75315,56282.53,69338,0,0,0,0,0,0,0]}]},{n:"Van Leeuwen Ice Cream",u:"",a:923,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[80020,84926,86090,72601,80020,84090,86090,72601,60730,55578,36453,40881]},{yr:2022,m:[37950,34402,51647,64136,62013,60608,65396,54520,50288,51470,37590,44953]},{yr:2023,m:[58440,48127,64428,72179,73331,80407,80388,68159,60702,57282,60358,48092]},{yr:2024,m:[42864,51973,68234,64541,66141,67915,63735,63870,56564,52579,47418,43026]},{yr:2025,m:[37396,45325,67335,67221,78334,62290,59306,57714,54016,55173,48305,55131]},{yr:2026,m:[49392,47744,63489,62753.9,74512,0,0,0,0,0,0,0]}]},{n:"Vuori",u:"",a:3102,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,1717588]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,5385439]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,6050660]},{yr:2025,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2026,m:[0,0,0,0,0,0,0,0,0,0,0,0]}]},{n:"Warby Parker",u:"",a:1842,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[140374,101323,138243,132371,137575,133358,168640,144704,117958,128158,12506,128909]},{yr:2022,m:[178400,121107,118895,122512,137022,158402,141104,147541,135100,120213,90948,166434]},{yr:2023,m:[176458,118875,159185,120769,149548,165290,133468,163089,134376,135802,119403,141486]},{yr:2024,m:[202860,159498,168625,175884,158018,168063,151478,190809,170016,146530,150111,188896]},{yr:2025,m:[208195,128603,207922,163841,191875,214533,173233,185061,173787,149828,147195,191762]},{yr:2026,m:[196464,161733,209114,0,0,0,0,0,0,0,0,0]}]},{n:"White House Black Market",u:"",a:3248,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[25030,25929,66683,59043,68105,85683,46150,54464,86127,79965,95737,113013]},{yr:2022,m:[62692,86717,137392,127700,132332,105614,64406,91167,117666,125784,104859,122867]},{yr:2023,m:[73511,108843,122367,112483,108897,122147,63545,84425,112937,117882.55,98101,123503]},{yr:2024,m:[87518,91378,164423,111006,110272,94428,53177,72749,107952,61461,66313,111999]},{yr:2025,m:[54169,73372,122267,104286,100903,89884,52978,64502,105137,76401,73699,88796]},{yr:2026,m:[48734,83080,114713.12,90472,104221,0,0,0,0,0,0,0]}]}];
+const STLS_RENT = {"139Made":{basePSF:40.58,nnnPSF:15.15},"2250 Interiors & Gifts":{basePSF:27.48,nnnPSF:15.33},"Altar'd State":{basePSF:0.0,nnnPSF:0.0},"Ann Taylor Loft":{basePSF:21.01,nnnPSF:0.0},"Aventography Enterprises":{basePSF:4.36,nnnPSF:0.0},"Baby's 1st Furniture":{basePSF:31.21,nnnPSF:18.18},"Baker St. Pub & Grill":{basePSF:30.5,nnnPSF:15.58},"Bar Louie":{basePSF:38.08,nnnPSF:17.23},"B.B Italia":{basePSF:38.0,nnnPSF:18.18},"Boardroom Salon for Men":{basePSF:34.78,nnnPSF:17.23},"CAVA (Former Zoes)":{basePSF:32.0,nnnPSF:16.26},"Chipotle Mexican Grill":{basePSF:38.0,nnnPSF:15.58},"Escalantes":{basePSF:42.5,nnnPSF:18.18},"Farah Talib Aziz":{basePSF:41.62,nnnPSF:0.0},"Fish City Grill":{basePSF:39.66,nnnPSF:18.18},"Flying Saucer Draught Emporium":{basePSF:34.12,nnnPSF:16.26},"Fred Astaire Dance Studio":{basePSF:24.5,nnnPSF:16.26},"House of Blooms":{basePSF:68.71,nnnPSF:33.35},"Japaneiro's":{basePSF:42.28,nnnPSF:18.18},"Jimmy John's Gourmet Sandwich":{basePSF:42.0,nnnPSF:18.17},"Jos A Bank Clothiers":{basePSF:29.87,nnnPSF:15.58},"Juiceland":{basePSF:0.0,nnnPSF:0.0},"Jupiter Pizza & Waffle Co.":{basePSF:30.0,nnnPSF:18.18},"Kilwins Chocolates and Ice Cream":{basePSF:40.59,nnnPSF:18.18},"Little Joy":{basePSF:43.94,nnnPSF:81.82},"Mahesh's Kitchen":{basePSF:34.0,nnnPSF:13.56},"Memorial Eye":{basePSF:41.06,nnnPSF:18.18},"P.F. Chang's China Bistro":{basePSF:31.81,nnnPSF:4.03},"Paletas Morelia":{basePSF:40.05,nnnPSF:18.18},"Perry's Grille & Steakhouse":{basePSF:51.26,nnnPSF:15.58},"Rouxpour":{basePSF:62.2,nnnPSF:22.39},"Salata in Sugar Land":{basePSF:31.84,nnnPSF:18.17},"Sweet Paris":{basePSF:35.42,nnnPSF:15.82},"Swirll Frozen Yogurt":{basePSF:38.96,nnnPSF:18.18},"Thai Thumbz Urban Kitchen":{basePSF:38.95,nnnPSF:18.17},"The Toasted Yolk":{basePSF:35.5,nnnPSF:18.18},"Vino & Vinyl":{basePSF:36.41,nnnPSF:17.23},"Wearhouse Boutique":{basePSF:26.62,nnnPSF:8.2}};
+
+
+const STLS_REVIEWS = {"139Made":{google:{score:5.0,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.8,count:null}},"2250 Interiors & Gifts":{google:{score:4.8,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:null,count:null}},"Altar'd State":{google:{score:4.0,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.1,count:null}},"Ann Taylor Loft":{google:{score:4.0,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:5.0,count:null}},"Aventography Enterprises":{google:{score:4.6,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:null,count:null}},"Baby's 1st Furniture":{google:{score:4.6,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:null,count:null}},"Baker St. Pub & Grill":{google:{score:4.2,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.7,count:null}},"Bar Louie":{google:{score:3.9,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.3,count:null}},"B.B Italia":{google:{score:4.1,count:null},opentable:{score:4.5,count:null},resy:{score:null,count:null},yelp:{score:3.6,count:null}},"Boardroom Salon for Men":{google:{score:4.5,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:null,count:null}},"CAVA (Former Zoes)":{google:{score:4.5,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.2,count:null}},"Chipotle Mexican Grill":{google:{score:4.1,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.0,count:null}},"Escalantes":{google:{score:4.7,count:null},opentable:{score:4.4,count:null},resy:{score:null,count:null},yelp:{score:3.3,count:null}},"Farah Talib Aziz":{google:{score:4.1,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:null,count:null}},"Fish City Grill":{google:{score:4.5,count:null},opentable:{score:4.5,count:null},resy:{score:null,count:null},yelp:{score:3.5,count:null}},"Flying Saucer Draught Emporium":{google:{score:4.4,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.0,count:null}},"Fred Astaire Dance Studio":{google:{score:4.9,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:null,count:null}},"House of Blooms":{google:{score:4.9,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:null,count:null}},"Japaneiro's":{google:{score:4.5,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.2,count:null}},"Jimmy John's Gourmet Sandwich":{google:{score:3.9,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:null,count:null}},"Jos A Bank Clothiers":{google:{score:4.4,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:null,count:null}},"Juiceland":{google:{score:4.7,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.7,count:null}},"Jupiter Pizza & Waffle Co.":{google:{score:4.5,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.2,count:null}},"Kilwins Chocolates and Ice Cream":{google:{score:4.6,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.1,count:null}},"Little Joy":{google:{score:4.1,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.0,count:null}},"Mahesh's Kitchen":{google:{score:4.3,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.0,count:null}},"Memorial Eye":{google:{score:3.7,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:null,count:null}},"P.F. Chang's China Bistro":{google:{score:4.5,count:null},opentable:{score:4.6,count:null},resy:{score:null,count:null},yelp:{score:3.8,count:null}},"Paletas Morelia":{google:{score:4.7,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.2,count:null}},"Perry's Grille & Steakhouse":{google:{score:4.5,count:null},opentable:{score:4.7,count:null},resy:{score:null,count:null},yelp:{score:3.8,count:null}},"Rouxpour":{google:{score:4.3,count:null},opentable:{score:4.8,count:null},resy:{score:null,count:null},yelp:{score:4.5,count:null}},"Salata in Sugar Land":{google:{score:4.2,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.0,count:null}},"Sweet Paris":{google:{score:4.6,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.5,count:null}},"Swirll Frozen Yogurt":{google:{score:4.0,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.6,count:null}},"Thai Thumbz Urban Kitchen":{google:{score:4.3,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.9,count:null}},"The Toasted Yolk":{google:{score:4.1,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.8,count:null}},"Vino & Vinyl":{google:{score:4.6,count:null},opentable:{score:4.8,count:null},resy:{score:null,count:null},yelp:{score:4.4,count:null}},"Wearhouse Boutique":{google:{score:4.9,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.3,count:null}}};
+const STLS_TENANTS = [{n:"139Made",u:"",a:198,c:"rt",y:[{yr:2018,m:[2466,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[1125,396,1575,1774,1353,1724,1002,845,1661,833,1757,1881]},{yr:2020,m:[905,1412,312,0,271,660,406,1018,1086,1261,1584,2590]},{yr:2021,m:[630,429,2150,1745,1356,2568,1599,1324,1696,2318,2694,2490]},{yr:2022,m:[1080,1221,2152,2241,1844,1392,1563,882,1828,2564,900,3680]},{yr:2023,m:[1244,2715,2560,2468,2094,697,2111,2224,2463,2630,5184,3384]},{yr:2024,m:[1017,1042,1637,2140,1892,1518,251,1266,1864,2346,3637,2181]},{yr:2025,m:[1662,1763,2546,2420,3102,1326,2039,1400,1823,2056,1502,2947]},{yr:2026,m:[1023,0,0,0,0,0,0,0,0,0,0,0]}]},{n:"2250 Interiors & Gifts",u:"",a:5400,c:"fb",y:[{yr:2018,m:[101610,128446,152941,132183,143795,149565,172802,101558,133493,182829,164930,141678]},{yr:2019,m:[121298,105480,134092,119712,147104,110125,144416,160073,138618,197317,208165,175508]},{yr:2020,m:[118136,127929,118450,63121,183554,130288,145528,120048,164095,209897,185611,112163]},{yr:2021,m:[123507,303489,213925,247728,234958,256760,192735,249957,276910,185291,235371,166657]},{yr:2022,m:[221699,198191,232207,257064,208670,158458,244035,238076,303919,266965,254120,260529]},{yr:2023,m:[172662,206191,311519,220876,242229,219478,198855,264643,255023,213049,148157,300878]},{yr:2024,m:[160398,238526,205559,217410,133683,159496,89540,152933,145499,153064,0,0]},{yr:2025,m:[114814,161920,237178,119990,172074,134959,230710,155819,71799,115952,90904,165930]},{yr:2026,m:[102087,87819,196783,181774,0,0,0,0,0,0,0,0]}]},{n:"Altar\'d State",u:"",a:6098,c:"rt",y:[{yr:2018,m:[118597,101118,173639,114632,151609,139332,113275,145246,138350,149415,185134,265491]},{yr:2019,m:[113952,91383,142993,127579,147317,131216,112487,126245,107656,117067,180079,234233]},{yr:2020,m:[95610,93949,43165,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[72958,52020,113355,126027,153672,140989,118963,135837,107940,142826,168356,240954]},{yr:2022,m:[84047,94708,150797,150816,182487,145759,141706,152921,117547,134902,180571,255961]},{yr:2023,m:[93275,137485,164358,177147,198326,149679,156454,147855,138450,142324,203732,235189]},{yr:2024,m:[105893,154382,234833,170830,233343,201084,182694,211871,158402,151976,260158,225527]},{yr:2025,m:[45693,61261,103117,80778,227924,264519,193156,202349,141836,135721,254751,240497]},{yr:2026,m:[139982,162018,260612,214816,270749.77,0,0,0,0,0,0,0]}]},{n:"Ann Taylor Loft",u:"",a:5500,c:"rt",y:[{yr:2018,m:[43647,66737,104099,75100,84784,90965,66290,74880,92699,72052,84790,81392]},{yr:2019,m:[47707,48081,90905,73296,79417,86872,56684,64439,68558,58676,75024,78623]},{yr:2020,m:[31885,44358,19357,0,0,7986,0,0,0,0,0,0]},{yr:2021,m:[11069,20293,46699,46649,61144,75789,49376,41050,63131,55349,77145,78517]},{yr:2022,m:[36098,45817,87752,87567,98363,96862,71898,73796,94786,79201,99551,99899]},{yr:2023,m:[67918,59424,103752,96819,104489,103848,75206,64619,81224,74180,89386,105752]},{yr:2024,m:[65654,72632,114415,87058,96772,107550,58706,70387,96249,65791,91826,104253]},{yr:2025,m:[45693,61261,103117,80778,103273,107498,67154,66462,98552,67469,81674,83303]},{yr:2026,m:[47420,52883,81323,72793,83837.8,0,0,0,0,0,0,0]}]},{n:"Aventography Enterprises",u:"",a:4129,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[21032,16249,21603,21250,16397,20665,0,0,0,0,0,0]},{yr:2022,m:[9449,7923,22670,13723,21657,18666,27091,15320,16818,18949,17983,17987]},{yr:2023,m:[15490,17400,28660,6233,45300,39988,15600,6033,2500,8200,22150,27995]},{yr:2024,m:[14500,600,18433,26433,24555,36200,28669,12550,28933,1050,36533,28033]},{yr:2025,m:[13066,11533,7933,21633,12033,13530,28933,12433,8044,26500,18300,22400]},{yr:2026,m:[28066,14550,16050,0,0,0,0,0,0,0,0,0]}]},{n:"Baby\'s 1st Furniture",u:"",a:3494,c:"rt",y:[{yr:2018,m:[70652,71278,101713,67674,71270,70195,68268,72414,85989,66269,99010,48041]},{yr:2019,m:[61871,102374,84690,109838,101688,78089,85297,74382,81824,64436,73218,53824]},{yr:2020,m:[66819,95136,31502,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[31207,24532,48767,50234,50234,58423,83715,65093,59649,77945,66374,75502]},{yr:2022,m:[67186,86502,64131,85877,71088,63454,78918,76882,86186,47133,58260,68541]},{yr:2023,m:[43559,64665,83990,82325,74452,73879,58467,78553,86631,65785,122070,59913]},{yr:2024,m:[83524,59385,95025,91086,70719,78900,99923,62980,67294,62708,96607,65541]},{yr:2025,m:[49494,68774,93213,51900,55851,61781,50851,52076,17856,65193,123046,57439]},{yr:2026,m:[70636,66770,69092,0,0,0,0,0,0,0,0,0]}]},{n:"Baker St. Pub & Grill",u:"",a:5685,c:"fb",y:[{yr:2018,m:[204387,232636,273296,180999,189557,193933,199667,211984,206320,243738,268454,317275]},{yr:2019,m:[186211,183986,247071,193713,231185,219754,203165,232398,192395,218263,206421,242918]},{yr:2020,m:[175723,176304,93136,1785,0,91070,47561,91927,131697,147790,128865,154653]},{yr:2021,m:[136650,121446,184185,174580,184689,192126,200827,160176,167911,196497,207054,239002]},{yr:2022,m:[186857,176893,224081,198990,197237,185271,198853,184984,186641,205562,200823,243489]},{yr:2023,m:[180471,171509,215108,221782,232400,225301,178505,182424,184549,188754,209923,241279]},{yr:2024,m:[173149,178717,219912,173919,201131,163421,190167,194844,198175,206330,211858,221163]},{yr:2025,m:[154673,148010,180678,154835,176531,174050,150820,154755,139048,161497,155388,229421.31]},{yr:2026,m:[145333,171005,196602.35,131068,0,0,0,0,0,0,0,0]}]},{n:"Bar Louie",u:"",a:7567,c:"fb",y:[{yr:2018,m:[256418,258287,335568,290755,332576,301059,284259,281101,282594,285376,309070,0]},{yr:2019,m:[246424,232949,334075,298484,339740,293801,284259,273305,242989,308797,272349,295835]},{yr:2020,m:[689333,46461,239958,193151,217935,0,0,0,0,0,0,0]},{yr:2021,m:[269284,175900,256303,324357,392387,351286,350104,287772,319446,416313,344053,354109]},{yr:2022,m:[279091,274158,342569,349903,271421,290651,0,0,0,0,0,0]},{yr:2023,m:[331327,294602,349726,343600,312319,365226,316162,270596,280363,304577,297421,343778]},{yr:2024,m:[225683,245410,300706,277971,223992,281702,241779,232881,208007,198390,218910,225660]},{yr:2025,m:[199758,185134,223876,202064,239688,236881,217993,199571,194412,208524,209784,229075]},{yr:2026,m:[160002,179501,0,0,0,0,0,0,0,0,0,0]}]},{n:"B.B Italia",u:"",a:6677,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,421592,717915]},{yr:2023,m:[544534,484664,484676,465446,499262,467230,469845,514329,437788,396769,437177,558374]},{yr:2024,m:[309959,349649,358806,347621,388215,322694,288552,396889,317537,300255,0,402279]},{yr:2025,m:[269290,297793,298181,264879,347944,297472,270324,357488,252468,291672,293926,352451]},{yr:2026,m:[319722,327159,301863,269026,0,0,0,0,0,0,0,0]}]},{n:"Boardroom Salon for Men",u:"",a:1612,c:"sv",y:[{yr:2018,m:[26186,31141,39245,42770,42770,42770,50452,46125,52801,45837,54036,54747]},{yr:2019,m:[48087,47095,53271,54245,63294,63240,62475,62475,62475,0,0,0]},{yr:2020,m:[62469,56646,45244,0,36185,43334,33737,48025,46747,53316,42025,61166]},{yr:2021,m:[44604,45645,54842,53089,65637,71024,52568,59578,57834,49503,63335,82714]},{yr:2022,m:[54512,57494,62988,64845,62142,69899,64532,64944,63300,55374,55180,106620]},{yr:2023,m:[58164,57825,72100,55352,69901,76878,52447,65938,84127,52828,59788,95451]},{yr:2024,m:[55259,61655,65826,48264,52873,72850,56755,56260,69188,57857,56266,91418]},{yr:2025,m:[52658,52974,61579,51900,55851,61781,50851,52076,60844,58911,56174,80694]},{yr:2026,m:[60190,62627,78435,62840,62117.41,0,0,0,0,0,0,0]}]},{n:"CAVA (Former Zoes)",u:"",a:2711,c:"fb",y:[{yr:2018,m:[120115,121584,127465,126516,139972,123409,119494,137831,125196,126525,117916,112040]},{yr:2019,m:[123407,114469,134798,109545,133335,130869,124413,123496,106195,117690,105389,104777]},{yr:2020,m:[126264,117704,85641,71933,135463,136123,112826,119470,117128,125092,108680,93606]},{yr:2021,m:[121414,93356,146988,149532,157994,154819,155303,152124,139216,144265,133149,0]},{yr:2022,m:[79611,31294,148167,164936,157843,152280,165528,161093,158360,142557,162915,0]},{yr:2023,m:[207548,195959,215899,219560,249280,251355,242382,233657,224291,213433,198149,202727]},{yr:2024,m:[216901,211383,224787,233902,255713,261604,251326,262692,232578,248702,214150,217779]},{yr:2025,m:[207504,207093,242485,238312,263394,255069,221030,202729,185507,191795,175885,175237]},{yr:2026,m:[198463,197077,218550,210443,229740,0,0,0,0,0,0,0]}]},{n:"Chipotle Mexican Grill",u:"",a:3011,c:"fb",y:[{yr:2018,m:[188679,175957,206836,193835,217350,203542,207938,201128,174303,195833,179068,182682]},{yr:2019,m:[191506,164681,197516,191909,205752,199132,196821,191128,171268,187424,173983,182825]},{yr:2020,m:[178990,167047,127710,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[178410,139927,201992,195328,205082,210559,211818,0,0,0,0,0]},{yr:2022,m:[212220,198447,238246,225476,239388,241040,235451,251654,232197,245265,216174,239106]},{yr:2023,m:[252181,219231,257317,247532,272756,270974,272403,267056,250892,275216,248065,276296]},{yr:2024,m:[268167,254354,280018,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2026,m:[0,0,0,0,0,0,0,0,0,0,0,0]}]},{n:"Escalantes",u:"",a:5756,c:"fb",y:[{yr:2018,m:[210411,234930,286906,249386,291888,276944,241506,258672,215154,243975,239404,252729]},{yr:2019,m:[205516,207013,269044,236433,274778,243839,200025,211587,208041,231529,216574,256272]},{yr:2020,m:[195460,246446,117605,51659,169744,185359,130765,176948,185124,237676,191800,199123]},{yr:2021,m:[190619,170875,257016,246771,330894,297704,291088,261218,240088,289044,260558,312686]},{yr:2022,m:[229333,245803,304525,316472,346273,274573,280339,281407,276048,316571,258986,308377]},{yr:2023,m:[253504,269063,290494,262061,294549,239844,243365,234124,230073,262990,240493,265500]},{yr:2024,m:[196679,233707,249678,262606,284064,258888,242871,252616,258903,261716,266345,256944]},{yr:2025,m:[186350,230907,248969,263675,319781,264354,238300,243015,230910,250506,265873,296748]},{yr:2026,m:[252072,279242,275400,255127.5,316182.29,0,0,0,0,0,0,0]}]},{n:"Farah Talib Aziz",u:"",a:1404,c:"rt",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[654,8273,23273,9951,8559,20598,6469,0,0,0,0,0]},{yr:2020,m:[11621,16879,5082,1124,4180,4374,6074,6444,3410,6913,7850,6957]},{yr:2021,m:[7164,4086,5092,8394,11444,8734,5606,7512,7750,12480,11082,11246]},{yr:2022,m:[3437,7042,9792,13034,16219,10449,14188,15041,14404,10667,9347,8274]},{yr:2023,m:[7222,7549,11430,126469,79472,70562,92778,98648,75627,76586,100672,0]},{yr:2024,m:[53774,81169,85011,74642,67712,62010,58336,67405,84769,66752,89353,71733]},{yr:2025,m:[38947,78397,91624,51969,56424,73445,41153,74781,86165,102012,68361,57521]},{yr:2026,m:[45380,67521,90335,72387,0,0,0,0,0,0,0,0]}]},{n:"Fish City Grill",u:"",a:2225,c:"fb",y:[{yr:2018,m:[104194,117054,146704,104284,124603,126482,128356,126300,106553,109103,105308,111382]},{yr:2019,m:[115349,116400,150148,127450,131086,133794,121984,120066,107586,108455,108610,104574]},{yr:2020,m:[92977,137813,91619,55433,101610,103343,82995,108014,110336,110174,98809,101698]},{yr:2021,m:[112153,105037,168249,161761,173602,172090,178425,146721,150330,162384,151810,144004]},{yr:2022,m:[141113,153298,193072,187544,179319,162511,178654,167973,161772,165328,144068,150167]},{yr:2023,m:[163276,177239,211976,157176,164039,161756,110392,158051,155800,156968,141343,150709]},{yr:2024,m:[123509,154339,180519,172212,178523,168995,157101,148582,135360,144010,133144,131470]},{yr:2025,m:[123539,130394,163158,149071,158480,153391,139850,132305,121876,130814,123040,129601]},{yr:2026,m:[0,0,0,0,0,0,0,0,0,0,0,0]}]},{n:"Flying Saucer Draught Emporium",u:"",a:5317,c:"fb",y:[{yr:2018,m:[218131,211853,269526,251712,246160,258242,244252,240779,234262,266331,246864,259138]},{yr:2019,m:[245737,205706,267609,248283,264848,241364,246349,245502,230961,279840,243744,249439]},{yr:2020,m:[244581,236371,132405,49949,124318,120084,29126,102481,124096,159888,147636,163633]},{yr:2021,m:[136470,107455,168827,161370,189124,196509,200200,170200,169518,239507,178137,197747]},{yr:2022,m:[156057,156021,210610,205701,204699,180628,184293,184732,182032,242954,184146,203364]},{yr:2023,m:[164962,158875,196197,191715,194794,175606,173705,165755,162324,266007,176426,199349]},{yr:2024,m:[159514,173113,198959,188543,186231,183503,174106,159779,167676,215638,160462,173068]},{yr:2025,m:[147903,146091,175800,159294,176783,164092,165457,165636,157647,220360,159440,183884]},{yr:2026,m:[151661,162118,173949,161496,0,0,0,0,0,0,0,0]}]},{n:"Fred Astaire Dance Studio",u:"",a:3378,c:"sv",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[31585,52356,55982,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[23574,47409,58182,28134,34575,119733,21319,26830,13234,25875,66091,118182]},{yr:2024,m:[9515,9802,23581,12000,39764,53904,36717,26096,28779,18591,91980,112317]},{yr:2025,m:[78632,30445,53374,55268,81734,129448,23994,69566,118696,26981,183347,37843]},{yr:2026,m:[0,0,0,0,0,0,0,0,0,0,0,0]}]},{n:"House of Blooms",u:"",a:1198,c:"rt",y:[{yr:2018,m:[40990,68039,35111,41742,50376,27750,25930,45495,34569,33395,35384,36659]},{yr:2019,m:[34596,61842,34890,35323,46594,26182,26288,38121,30563,41532,30651,36058]},{yr:2020,m:[32100,59763,25069,5336,48908,35238,36143,35464,36567,44159,33888,49672]},{yr:2021,m:[39686,59023,51988,53840,63573,43286,48196,49669,45040,54743,44235,55378]},{yr:2022,m:[47709,81137,53826,53831,63912,49116,47671,60801,49713,51396,45627,46512]},{yr:2023,m:[36878,58803,58855,37893,64697,45107,35094,48757,63347,50797,54184,0]},{yr:2024,m:[42831,90789,45595,39775,56648,30697,25152,41761,38855,38959,43610,45597]},{yr:2025,m:[78511,71603,43825,41566,51623,26362,32733,34378,42312,44405,57883,50157]},{yr:2026,m:[44103,52737,44147,43527,0,0,0,0,0,0,0,0]}]},{n:"Japaneiro\'s",u:"",a:3388,c:"fb",y:[{yr:2018,m:[397334,368638,439411,381793,432074,460684,444146,436347,318825,319588,323566,362606]},{yr:2019,m:[321020,299166,382371,333564,373244,363874,358681,356843,369725,358625,387878,401763]},{yr:2020,m:[378919,369388,249209,156974,313651,379425,348551,388628,366082,400567,374900,394510]},{yr:2021,m:[385704,295573,444491,443645,481855,490317,491437,471436,432814,471426,454000,494687]},{yr:2022,m:[390802,469750,469076,499619,473094,491790,488073,451455,422200,478685,0,0]},{yr:2023,m:[418514,286815,337349,357067,396304,388497,347502,387922,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[306050,317481,359271,341941,389010,368340,365062,379853,337434,360199,338983,384012]},{yr:2026,m:[336019,304645,380903,0,0,0,0,0,0,0,0,0]}]},{n:"Jimmy John\'s Gourmet Sandwich",u:"",a:1462,c:"rt",y:[{yr:2018,m:[43928,43691,48499,47214,53195,52768,48933,54858,45297,51594,45126,47592]},{yr:2019,m:[46953,42543,47984,51437,51553,54690,51783,53970,47438,48649,41350,45084]},{yr:2020,m:[43295,41452,28977,11816,27455,38238,34891,37547,35135,41949,35678,42432]},{yr:2021,m:[39275,34421,46942,46498,45752,48897,47790,46691,44582,46750,42566,48524]},{yr:2022,m:[39763,40561,52569,43298,45752,49920,45515,48039,47272,49167,41999,48957]},{yr:2023,m:[48115,42886,52830,51173,56059,55407,54694,53787,51222,52510,55872,56338]},{yr:2024,m:[47467,52714,50477,58637,56635,55283,61306,58120,49944,61915,57075,51245]},{yr:2025,m:[45453,49336,57765,58709,60305,54942,54792,53044,52862,60414,53203,49340]},{yr:2026,m:[48936,47166,54554,55084,67060,0,0,0,0,0,0,0]}]},{n:"Jos A Bank Clothiers",u:"",a:4341,c:"rt",y:[{yr:2018,m:[168301,136486,177681,155681,159238,182160,111215,117036,178851,131938,167947,259504]},{yr:2019,m:[135594,125254,165016,156973,169544,173899,109274,114962,162499,134585,163037,244625]},{yr:2020,m:[114063,116694,48829,3707,18713,54178,33001,31718,725578,57589,59821,77342]},{yr:2021,m:[47446,39057,70342,90290,99725,117172,90494,81884,111216,115505,125795,130987]},{yr:2022,m:[95273,103883,132241,137528,148038,128508,79676,106736,133115,102909,116630,151703]},{yr:2023,m:[150155,104789,131587,120776,120934,128117,89432,106595,134530,122414,122102,182207]},{yr:2024,m:[136621,106521,161015,138720,124223,121520,84153,158055,118995,0,0,0]},{yr:2025,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2026,m:[0,0,0,0,0,0,0,0,0,0,0,0]}]},{n:"Juiceland",u:"",a:0,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2026,m:[36960,35315,43628,40213,44281.16,0,0,0,0,0,0,0]}]},{n:"Jupiter Pizza & Waffle Co.",u:"",a:4582,c:"fb",y:[{yr:2018,m:[207399,199440,277976,242411,265189,287070,284042,279609,245194,242157,243321,274449]},{yr:2019,m:[248883,214994,295932,255359,292519,288887,284173,278517,244205,244117,252790,262461]},{yr:2020,m:[243868,240930,157372,49597,128784,204890,198429,244794,231035,273164,243467,253100]},{yr:2021,m:[254237,198312,298991,300277,336607,355171,359934,316708,285987,337463,307782,322733]},{yr:2022,m:[254043,355622,361423,371152,359782,376043,313643,352004,285086,349110,0,0]},{yr:2023,m:[303654,286815,337349,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[297442,324563,340980,310436,315240,0,0,0,0,0,0,0]},{yr:2025,m:[275249,266962,351581,293766,374757,325025,310922,331361,273746,305298,316166,313640]},{yr:2026,m:[271900,262095,329776,0,0,0,0,0,0,0,0,0]}]},{n:"Kilwins Chocolates and Ice Cream",u:"",a:1464,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[24593,44830,44107,38615,34278,33160,44878,0,0,0,0,0]},{yr:2020,m:[28911,39722,21326,10213,21883,27455,21596,25774,31277,46626,34561,45078]},{yr:2021,m:[32362,34984,55087,50052,62740,65082,69249,55591,54863,64043,49568,71889]},{yr:2022,m:[39643,49535,62104,63217,63520,57805,58211,50671,52761,65210,41783,61970]},{yr:2023,m:[42106,52847,62366,59004,60255,62258,61281,44520,48990,49185,39766,59285]},{yr:2024,m:[32617,49707,58562,50458,56358,55597,43453,48236,48236,51267,45863,53269]},{yr:2025,m:[32028,47255,53767,50594,61714,53624,51646,49370,49540,53513,49548,58286]},{yr:2026,m:[34384,50003,50771,42031,53026.11,0,0,0,0,0,0,0]}]},{n:"Little Joy",u:"",a:198,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[14195,16856,14996,14873,9417,8988,11890,0,0,0,0,0]},{yr:2022,m:[2660,3301,5883,7871,6845,6023,8525,6623,11322,12416,7368,11185]},{yr:2023,m:[7917,8107,11764,14389,10695,12210,11244,10272,13154,14899,7097,11995]},{yr:2024,m:[5274,7738,11763,12204,10308,10083,7660,9928,11573,11010,10486,11605]},{yr:2025,m:[1951,4162,13496.7,10251.57,13012.67,10470,10681,8555,9313,9970,9500,12042]},{yr:2026,m:[5301,8096,0,11190,0,0,0,0,0,0,0,0]}]},{n:"Mahesh\'s Kitchen",u:"",a:3175,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[115594,116061,124969,138453,0,0,0,0,0,0,0,0]},{yr:2022,m:[136967,153504,132974,157261,153645,138675,146769,138776,149498,173543,142271,158541]},{yr:2023,m:[138488,133204,137803,146657,169176,158924,139854,177887,281887,321959,302010,178332]},{yr:2024,m:[120002,146587,144562,124205,168957,152853,115187,152601,162751,135143,117380,130425]},{yr:2025,m:[84688,89537,100778,83331,102543,85962,77228,0,0,0,0,0]},{yr:2026,m:[0,0,0,0,0,0,0,0,0,0,0,0]}]},{n:"Memorial Eye",u:"",a:1618,c:"sv",y:[{yr:2018,m:[38504,50333,43515,34456,59781,39448,37511,48757,39279,37714,45583,43158]},{yr:2019,m:[34485,40208,39914,30927,32353,39711,29330,47686,43102,44531,31787,43120]},{yr:2020,m:[35434,32991,30212,4174,30880,36080,37255,43226,35158,33469,33194,53113]},{yr:2021,m:[36347,45963,46996,68656,29489,34776,38230,42713,45737,28916,47107,64477]},{yr:2022,m:[51434,49168,84081,40079,53018,74188,57928,55978,59840,43932,56775,87031]},{yr:2023,m:[50989,59471,87424,59458,58275,89071,68642,74246,71302,51484,60048,94888]},{yr:2024,m:[64890,67818,81453,66230,64997,76676,68489,72621,78229,61541,61096,81738]},{yr:2025,m:[70405,75984,77240,72094,57641,90248,66488,67892,70121,62237,55925,81962]},{yr:2026,m:[69911,61976,68173,62583,60795.76,0,0,0,0,0,0,0]}]},{n:"P.F. Chang\'s China Bistro",u:"",a:7516,c:"fb",y:[{yr:2018,m:[465528,382751,431524,380316,407127,438654,436811,425957,390090,380706,396015,477436]},{yr:2019,m:[404907,377605,433015,357499,418270,417425,390167,435145,366127,365047,395936,474393]},{yr:2020,m:[421181,406965,262675,243002,309242,254718,188270,328134,349881,387838,351380,400166]},{yr:2021,m:[429592,332032,460507,445558,493931,464523,467579,456098,419247,450531,460247,439765]},{yr:2022,m:[422647,450137,467879,471103,528950,470381,474845,459879,437629,442128,432269,546353]},{yr:2023,m:[478168,443821,470807,462793,535236,477951,508692,512542,488331,472879,423941,582023]},{yr:2024,m:[475392,512389,558816,468539,542927,557401,513870,536989,464033,472247,470166,550325]},{yr:2025,m:[445705,423644,448669,409009,504256,451062,434624,460428,400351,430596,424081,545233]},{yr:2026,m:[450297,481639,463857.74,434817.85,0,0,0,0,0,0,0,0]}]},{n:"Paletas Morelia",u:"",a:1173,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[27197,27197,27197,52798,52798,52798,38618,38618,38618,38618,38618,38618]},{yr:2023,m:[49006,49006,49006,43013,43013,43013,43013,43013,43013,43013,43013,26740]},{yr:2024,m:[13660,23011,30504,34902,43256,56793,44392,52043,48615,45304,34205,36784]},{yr:2025,m:[19666,25279,49887,46530,64896,60253,61698,48290,40464,41708,37482,0]},{yr:2026,m:[20051,0,0,0,0,0,0,0,0,0,0,0]}]},{n:"Perry\'s Grille & Steakhouse",u:"",a:9650,c:"fb",y:[{yr:2018,m:[501843,556448,448832,539188,547328,567979,424198,583808,465639,509476,516301,783558]},{yr:2019,m:[485402,568198,510798,391835,564251,507394,470522,594875,470657,596984,580795,795322]},{yr:2020,m:[506457,628335,300997,210757,366452,433861,312688,449429,451310,466887,449560,630158]},{yr:2021,m:[491209,469340,525409,569566,695014,698813,603024,470905,370866,527210,658809,998192]},{yr:2022,m:[652299,771513,693522,755634,815916,670778,676801,774559,721546,720653,807316,1109598]},{yr:2023,m:[700755,823456,705175,705703,836871,749149,709910,809295,688858,734583,780136,1114476]},{yr:2024,m:[673771,790333,746058,641033,816257,701057,640695,766495,693518,679478,820268,1085426]},{yr:2025,m:[694316,811199,715580,724313,895831,765192,684067,804985,664055,739355,799498,1093233]},{yr:2026,m:[664835,843246,728395,710823,907692,0,0,0,0,0,0,0]}]},{n:"Rouxpour",u:"",a:5267,c:"fb",y:[{yr:2018,m:[330951,381195,457859,358026,369637,391363,292832,361838,290300,319202,290389,334117]},{yr:2019,m:[293501,312413,401073,302142,353863,335325,318333,338811,303051,332737,351284,377051]},{yr:2020,m:[323638,372649,197954,74617,272929,285405,303991,390983,427878,465095,411743,424536]},{yr:2021,m:[449233,374046,561596,546982,642345,631187,637777,596161,581096,656445,561919,695936]},{yr:2022,m:[560381,568536,680091,629553,627959,537985,497950,421416,420596,453584,435891,504262]},{yr:2023,m:[300313,502905,272300,565456,606804,610456,586266,568297,553800,553260,568939,661300]},{yr:2024,m:[526440,592310,635876,573076,629757,581850,505305,577921,583530,575651,568704,640022]},{yr:2025,m:[505138,562923,623856,581036,675470,583265,503040,530651,487395,556971,515486,615974]},{yr:2026,m:[504845,532535,546885,509892,589276.91,0,0,0,0,0,0,0]}]},{n:"Salata in Sugar Land",u:"",a:2847,c:"fb",y:[{yr:2018,m:[92964,90194,104391,99655,90889,112825,116564,92092,100404,66014,77526,0]},{yr:2019,m:[102742,89882,106057,107150,117508,123266,128444,119419,100869,103195,85581,90544]},{yr:2020,m:[107447,91129,61721,50054,93387,124948,123407,138738,135208,144987,127787,128167]},{yr:2021,m:[126335,89965,145262,146103,156290,167814,182542,179923,167626,175199,141101,155856]},{yr:2022,m:[160674,151088,191956,150373,188375,163653,146557,157592,143053,152039,129679,124294]},{yr:2023,m:[154499,135414,158461,145579,171977,168195,163245,161893,146101,147918,101121,49099]},{yr:2024,m:[120267,136135,139117,157151,146732,150577,133723,143697,132890,131743,111922,106258]},{yr:2025,m:[110199,119990,145379,145835,143980,137286,144178,135251,129874,126322,114869,107709]},{yr:2026,m:[111570,113040,125470.61,115996.69,119208.99,0,0,0,0,0,0,0]}]},{n:"Sweet Paris",u:"",a:2357,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[104521,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[107740,83914,120268,108015,138586,138527,134865,118950,119992,131104,124458,135784]},{yr:2022,m:[132433,118833,141660,131424,155915,131386,144102,135321,144011,149832,131179,157227]},{yr:2023,m:[157673,143477,162894,152573,173467,157321,166928,145661,152429,147950,148664,173902]},{yr:2024,m:[141578,146925,168406,154209,168919,156336,164775,157185,150028,152916,161703,169617]},{yr:2025,m:[142088,145501,160177,148319,178114,159697,152854,156772,136448,136823,147679,173901]},{yr:2026,m:[145772,136557,153427.75,144202.99,182589.92,0,0,0,0,0,0,0]}]},{n:"Swirll Frozen Yogurt",u:"",a:1096,c:"fb",y:[{yr:2018,m:[8633,10564,23941,16659,21124,24410,23883,20425,14713,14256,10078,11685]},{yr:2019,m:[11807,10776,18955,17098,23939,26892,24350,20100,16245,13937,12392,14394]},{yr:2020,m:[12612,10466,5116,0,3245,7083,8068,9033,8784,7956,6072,4198]},{yr:2021,m:[5025,3899,8081,7053,10121,16250,15488,13786,12074,12173,11883,17188]},{yr:2022,m:[7229,6652,11275,11436,11916,18517,16793,15573,13956,14906,11883,17188]},{yr:2023,m:[16457,14377,22299,20827,25663,30325,27154,23138,21913,18238,16223,17269]},{yr:2024,m:[11833,16326,18563,17233,27857,26927,26927,23646,20352,18513,12835,10835]},{yr:2025,m:[9354,11362,17218,10891,19362,18254,16873,15796,13945,13718,13941,12866]},{yr:2026,m:[10694,10676,14631,12826,0,0,0,0,0,0,0,0]}]},{n:"Thai Thumbz Urban Kitchen",u:"",a:2060,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2024,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2025,m:[83136.39,104384.45,125888.88,113842.64,165591.78,149034.97,169047.85,210212,175882,204508.89,198621.95,199643.6]},{yr:2026,m:[164906,0,0,0,0,0,0,0,0,0,0,0]}]},{n:"The Toasted Yolk",u:"",a:5954,c:"fb",y:[{yr:2018,m:[119842,190407,170585,166875,184160,0,0,0,0,0,0,0]},{yr:2019,m:[155796,145400,169415,138061,155235,159116,137876,144206,144447,144560,143794,155372]},{yr:2020,m:[145645,147367,87475,29646,95790,126801,112618,133890,141331,173634,152436,144181]},{yr:2021,m:[145328,121683,165666,169589,200601,188919,194942,178438,169264,176189,162952,178967]},{yr:2022,m:[169047,163033,176848,169483,196133,161399,177512,164453,160993,170328,157500,182808]},{yr:2023,m:[175925,157696,188580,191980,198563,168229,185250,172682,172920,172920,169001,185979]},{yr:2024,m:[149722,147498,179074,158630,154199,169521,170445,155723,160153,164797,182919,176691]},{yr:2025,m:[136042,147056,167600,167038,179882,162601,154207,154244,141628,142767,159375,148433]},{yr:2026,m:[124903,124016,132945,137717,170592,0,0,0,0,0,0,0]}]},{n:"Vino & Vinyl",u:"",a:2045,c:"rt",y:[{yr:2018,m:[54553,57452,76802,72405,79755,90542,71660,80707,71134,68944,74543,71640]},{yr:2019,m:[66475,80911,86384,75681,91087,83722,79252,101596,74116,68378,83641,0]},{yr:2020,m:[78215,0,38345,17530,38578,52946,60566,58441,55191,58431,44265,53692]},{yr:2021,m:[47849,52174,67583,73000,97515,90210,95542,95870,87110,96682,113062,109451]},{yr:2022,m:[78365,82534,104469,113694,91399,104343,98349,97855,99525,101808,84987,102045]},{yr:2023,m:[90401,91708,106108,121081,134393,133030,126140,126214,131290,116607,128308,122421]},{yr:2024,m:[116138,138351,151472,136318,159718,143066,110171,136259,105684,107543,114767,110050]},{yr:2025,m:[76871,108992,112923,124868,133500,114165,125785,155496,128088,132314,132814,126777]},{yr:2026,m:[107201,125078,125776,137568.56,148384.1,0,0,0,0,0,0,0]}]},{n:"Wearhouse Boutique",u:"",a:1464,c:"rt",y:[{yr:2018,m:[49180,42088,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[24071,28946,44249,38216,50320,38367,34599,43126,37955,39214,43244,56560]},{yr:2020,m:[28471,41305,18836,0,16347,19021,19059,16928,17467,24711,27264,26642]},{yr:2021,m:[23074,18778,33375,30025,42382,35643,34255,28098,35627,45209,34772,26642]},{yr:2022,m:[31930,29151,56317,47547,63555,50624,39723,34612,43361,49826,39641,49541]},{yr:2023,m:[26363,38641,48304,45685,44528,42365,29071,31563,40302,28640,28714,41687]},{yr:2024,m:[19432,24043,29327,26025,32782,35353,18751,23287,26530,22887,36932,36598]},{yr:2025,m:[20942,36889,48580,56289,73013,52824,40844,41326,47864,43061,36072,47160]},{yr:2026,m:[25197,46762,55514,46881,49936,0,0,0,0,0,0,0]}]}];
+const GREENSTREET_RENT = {"Life Time Fitness":{basePSF:20.94,nnnPSF:0.0},"Schmick":{basePSF:30.09,nnnPSF:0.0},"Pete's Piano Bar":{basePSF:37.0,nnnPSF:0.0},"810 Bowling":{basePSF:25.0,nnnPSF:0.0},"Guadalajara":{basePSF:41.4,nnnPSF:0.0},"House of Blues":{basePSF:21.59,nnnPSF:0.0},"Spaces":{basePSF:24.5,nnnPSF:0.0},"The Palm":{basePSF:32.0,nnnPSF:0.0},"Tom's Watch Bar":{basePSF:35.0,nnnPSF:0.0}};const GREENSTREET_REVIEWS = {"Life Time Fitness":{google:{score:3.8,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.8,count:null}},"Schmick":{google:{score:4.3,count:null},opentable:{score:4.4,count:null},resy:{score:null,count:null},yelp:{score:5.0,count:null}},"Pete's Piano Bar":{google:{score:4.6,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.6,count:null}},"810 Bowling":{google:{score:4.7,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.7,count:null}},"Guadalajara":{google:{score:4.4,count:null},opentable:{score:4.8,count:null},resy:{score:null,count:null},yelp:{score:3.5,count:null}},"House of Blues":{google:{score:4.4,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:3.3,count:null}},"Spaces":{google:{score:4.4,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.0,count:null}},"The Palm":{google:{score:4.4,count:null},opentable:{score:4.5,count:null},resy:{score:null,count:null},yelp:{score:2.8,count:null}},"Tom's Watch Bar":{google:{score:4.8,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:4.0,count:null}}};
+const GREENSTREET_TENANTS = [{n:"Life Time Fitness",u:"",a:35891,c:"sv",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,179798]},{yr:2022,m:[233113,246761,259028,266958,283633,301802,305908,311383,313944,309781,310315,302805]},{yr:2023,m:[309452,317210,329996,337637,349361,356360,353641,356438,373558,369218,375303,754402]},{yr:2024,m:[397208,413588,414584,411145,420873,424545,432935,457940,451095,458566,462711,461799]},{yr:2025,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2026,m:[0,0,0,0,0,0,0,0,0,0,0,0]}]},{n:"Schmick",u:"",a:8994,c:"fb",y:[{yr:2018,m:[298283,382454,392752,327421,376221,308252,275941,346223,283054,407598,358991,485565]},{yr:2019,m:[306914,386201,362133,349767,387332,299632,313912,340065,279474,337392,316533,429238]},{yr:2020,m:[313292,411522,155933,0,68614,79873,81194,117422,144191,149038,118130,163314]},{yr:2021,m:[126397,161161,201369,192671,227394,223158,227354,271757,238182,322646,292202,375858]},{yr:2022,m:[209701,342799,373244,311772,332144,291223,225593,298870,283694,304278,267643,442534]},{yr:2023,m:[297925,379783,329018,275053,287414,266907,205718,293809,248784,220126,257731,375940]},{yr:2024,m:[262381,412035,298416,245947,252824,250515,171286,247636,226077,297228,257307,395077]},{yr:2025,m:[228630,329435,272546,244978,211000,194761,164424,199021,231681,235640,283735,343525]},{yr:2026,m:[198491,360671,317318,255174,0,0,0,0,0,0,0,0]}]},{n:"Pete\'s Piano Bar",u:"",a:6378,c:"fb",y:[{yr:2018,m:[163827,181579,182784,131391,112544,173460,137725,158598,145723,139133,125839,203355]},{yr:2019,m:[158320,157750,162433,124609,128695,139973,160716,173451,124126,128792,160566,196229]},{yr:2020,m:[156808,192597,67485,0,4187,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,70925,85373,106481,110905,149001,105116,95115,166743,126318,162580]},{yr:2022,m:[150972,177453,171877,154935,133451,121313,162281,171273,187464,139515,109893,231122]},{yr:2023,m:[183947,208736,202104,184664,149865,186878,229650,171950,202739,154503,177170,225400]},{yr:2024,m:[165368,188079,195224,138894,128786,136991,140310,191856,141573,186192,143672,218499]},{yr:2025,m:[162081,205583,171149,127279,158403,133035,129193,138251,143091,152443,149656,213749]},{yr:2026,m:[155770.11,147860.8,132525.82,136534.97,0,0,0,0,0,0,0,0]}]},{n:"810 Bowling",u:"",a:24804,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[263374,228651,259494,296120,194623,261890,300442,260998,233414,225411,243124,398323]},{yr:2024,m:[260710,305902,309690,210966,218491,308217,257129,250115,238584,290964,200873,403891]},{yr:2025,m:[275016,297734,274221,236145,213105,240738,238727,238676,265917,240515,288265,398528]},{yr:2026,m:[255967,240453,319849,285631,0,0,0,0,0,0,0,0]}]},{n:"Guadalajara",u:"",a:6596,c:"fb",y:[{yr:2018,m:[320334,342798,416095,385066,405097,381636,334456,332404,342447,385072,366839,372126]},{yr:2019,m:[346179,356388,386870,380219,398338,331643,392312,360011,302717,400433,315302,328088]},{yr:2020,m:[307472,343454,146534,0,21824,70714,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,40681,145266,128768,119676,155582,158509,164530]},{yr:2022,m:[118758,153359,234443,244669,215084,191865,187149,185541,205261,207823,177154,200441]},{yr:2023,m:[175029,199356,230212,227604,247089,230995,194705,224526,221302,234471,206293,195879]},{yr:2024,m:[212715,260103,239360,252844,214198,191339,190145,204547,189236,255895,223282,214443]},{yr:2025,m:[193952,241593,0,248564,219578,188289,188208,193900,216094,226845,189191,202516]},{yr:2026,m:[189750,249519,268089,240464,0,0,0,0,0,0,0,0]}]},{n:"House of Blues",u:"",a:47639,c:"fb",y:[{yr:2018,m:[320334,342798,416095,385066,405097,381636,334456,332404,342447,385072,366839,372126]},{yr:2019,m:[346179,356388,386870,380219,398338,331643,392312,360011,302717,400433,315302,328088]},{yr:2020,m:[307472,343454,146534,0,21824,70714,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,40681,145266,128768,119676,155582,158509,164530]},{yr:2022,m:[118758,153359,234443,244669,215084,191865,187149,185541,205261,207823,177154,200441]},{yr:2023,m:[922927,1906346,1646191,1679746,2286965,1322087,1177152,1268550,2155780,1197606,1272427,1556232]},{yr:2024,m:[761383,1608250,1606916,1424870,1919325,1369440,1148950,1251304,1360700,1818069,1253357,0]},{yr:2025,m:[1401989,1646259,1791049,1474500,1423678,1254761,940320,1492199,1274971,2126482,1694032,1577938]},{yr:2026,m:[709496,1586408,1605426,1636204,0,0,0,0,0,0,0,0]}]},{n:"Spaces",u:"",a:63430,c:"sv",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[-132,-243,0,0,0,-169,6817,10297,15533,16076,22006,105246]},{yr:2022,m:[33005,40941,38006,43660,44600,46264,45128,51655,57810,61246,67375,72607]},{yr:2023,m:[67363,70178,66335,74337,66333,62270,60078,65815,38309,70025,65801,0]},{yr:2024,m:[62681,81049,91955,75106,85421,77103,92706,74059,90442,87929,102724,94664]},{yr:2025,m:[85130,103748,87409,88193,92799,79431,120004,102234,98819,75401,113823,75935]},{yr:2026,m:[87831,76973,82462,83080.47,0,0,0,0,0,0,0,0]}]},{n:"The Palm",u:"",a:9355,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[239219,356108,310609,267760,285622,230831,222648,296412,330105,299665,286101,612679]},{yr:2023,m:[271161,394020,363186,579094,630454,230500,181215,290484,269431,494641,243284,546646]},{yr:2024,m:[546646,417169,304757,200003,233758,243957,136908,198747,243491,367831,296763,476020]},{yr:2025,m:[194525,327621,281390,180633,192367,185691,151900,198167,291833,251876,324205,448877]},{yr:2026,m:[228237,467981,391279,236331,0,0,0,0,0,0,0,0]}]},{n:"Tom\'s Watch Bar",u:"",a:6149,c:"fb",y:[{yr:2018,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2019,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2020,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2021,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2022,m:[0,0,0,0,0,0,0,0,0,0,0,0]},{yr:2023,m:[0,0,0,0,0,0,0,0,0,0,215207,221969]},{yr:2024,m:[344341,213085,275287,194855,206801,229410,226481,230347,309185,315561,231022,259114]},{yr:2025,m:[245145,257675,392020,392380,393097,344034,235576,284931,488831,462784,394345,372659]},{yr:2026,m:[415208,418026,597920,0,0,0,0,0,0,0,0,0]}]}];
+
+const HENDERSON_RENT={};const HENDERSON_REVIEWS={};const HENDERSON_TENANTS = [];
+
+const PROP_DATA = {
+  autry:      {rent:AUTRY_RENT,      reviews:AUTRY_REVIEWS,      tenants:AUTRY_TENANTS,      lastUpdated:"April 2026"},
+  rice:       {rent:RICE_RENT,       reviews:RICE_REVIEWS,       tenants:RICE_TENANTS,        lastUpdated:"May 2026"},
+  stls:       {rent:STLS_RENT,       reviews:STLS_REVIEWS,       tenants:STLS_TENANTS,        lastUpdated:"May 2026"},
+  greenstreet:{rent:GREENSTREET_RENT,reviews:GREENSTREET_REVIEWS,tenants:GREENSTREET_TENANTS, lastUpdated:"April 2026"},
+  henderson:  {rent:HENDERSON_RENT,  reviews:HENDERSON_REVIEWS,  tenants:HENDERSON_TENANTS,   lastUpdated:"May 2026"},
+};
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+function grossRent(name,sf,rentData){const r=rentData[name];if(!r||sf<=0)return null;if(r.basePSF===0&&r.nnnPSF===0)return null;return(r.basePSF+r.nnnPSF)*sf;}
+function t12Sales(t){const all=[];[...t.y].sort((a,b)=>a.yr-b.yr).forEach(yd=>yd.m.forEach(v=>all.push(v)));return all.filter(v=>v>0).slice(-12).reduce((a,v)=>a+v,0);}
+function occCost(t,rentData){const s=t12Sales(t);if(!s)return null;const r=grossRent(t.n,t.a,rentData);if(r===null)return null;return r/s*100;}
+function niceTicks(max,n=5){if(!max)return[0];const step=Math.pow(10,Math.floor(Math.log10(max/n)));const mag=[1,2,5,10].find(m=>max/(step*m)<=n)*step;const t=[];for(let v=0;v<=max+mag;v+=mag)t.push(v);return t;}
+function allYearsFor(tenants){return[...new Set(tenants.flatMap(t=>t.y.map(x=>x.yr)))].sort();}
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let S = {
+  prop:'autry', chartType:'line', chartView:'all', metric:'sales',
+  search:'', showAll:false, detailIdx:null,
+  ownerMode:false,
+  activeYears:new Set(allYearsFor(AUTRY_TENANTS)),
+  activeMonths:new Set(MONTHS),
+};
+
+/// ─── OWNER MODE (URL param: Dashboard.html?prop=rice) ────────────────────────
+(function(){
+  const hp=new URLSearchParams(window.location.search).get('prop')||window.location.hash.slice(1);
+  const op=PROP_CONFIG.find(p=>p.id===hp);
+  if(op){
+    S.prop=op.id;
+    S.ownerMode=true;
+    S.activeYears=new Set(allYearsFor(PROP_DATA[op.id].tenants));
+  }
+})();
+
+function set(updates){Object.assign(S,updates);render();}
+
+// ─── TOOLTIP ─────────────────────────────────────────────────────────────────
+function showTip(evt,html){
+  const t=document.getElementById('tt');if(!t)return;
+  t.innerHTML=html;t.style.display='block';moveTip(evt);
+}
+function moveTip(evt){
+  const t=document.getElementById('tt');if(!t||t.style.display==='none')return;
+  const x=evt.clientX+16,y=evt.clientY-10;
+  t.style.left=Math.min(x,window.innerWidth-t.offsetWidth-16)+'px';
+  t.style.top=Math.max(10,Math.min(y,window.innerHeight-t.offsetHeight-10))+'px';
+}
+function hideTip(){const t=document.getElementById('tt');if(t)t.style.display='none';}
+
+// ─── SVG LINE CHART ───────────────────────────────────────────────────────────
+function svgLine(data,tenants,colors){
+  const W=880,H=400,P={t:15,r:20,b:68,l:70};
+  const pw=W-P.l-P.r, ph=H-P.t-P.b;
+  if(!data.length)return`<div class="no-data">No data for selected filters</div>`;
+  const allV=data.flatMap(d=>tenants.map(t=>d[t.n]||0));
+  const maxV=Math.max(...allV,1);
+  const ticks=niceTicks(maxV);
+  const maxT=ticks[ticks.length-1];
+  const xs=i=>P.l+(data.length>1?i/(data.length-1):0.5)*pw;
+  const ys=v=>P.t+ph-(v/maxT)*ph;
+  // store for event handlers
+  window._ld=data; window._lt=tenants; window._lc=colors;
+  window._lxs=data.map((_,i)=>xs(i));
+  let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;display:block;overflow:visible;cursor:crosshair" onmousemove="moveTip(event)" onmouseleave="hideLineTip()">`;
+  // grid
+  ticks.forEach(v=>{const y=ys(v);s+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="rgba(255,255,255,.05)" stroke-dasharray="3,3"/>`;s+=`<text x="${P.l-5}" y="${y+4}" text-anchor="end" fill="#555" font-size="10">${fmt(v)}</text>`;});
+  const iv=Math.max(1,Math.floor(data.length/14));
+  data.forEach((d,i)=>{if(i%iv===0){const x=xs(i);s+=`<text x="${x}" y="${H-P.b+14}" text-anchor="end" fill="#555" font-size="9" transform="rotate(-45,${x},${H-P.b+14})">${esc(d.label)}</text>`;}});
+  s+=`<line x1="${P.l}" y1="${P.t}" x2="${P.l}" y2="${H-P.b}" stroke="rgba(255,255,255,.08)"/>`;
+  s+=`<line x1="${P.l}" y1="${H-P.b}" x2="${W-P.r}" y2="${H-P.b}" stroke="rgba(255,255,255,.08)"/>`;
+  // crosshair
+  s+=`<line id="lch" x1="${P.l}" y1="${P.t}" x2="${P.l}" y2="${H-P.b}" stroke="rgba(255,255,255,.25)" stroke-dasharray="4,3" display="none"/>`;
+  // lines + dots (no <title>)
+  tenants.forEach((t,ti)=>{
+    const clr=colors[ti];
+    const pts=data.map((d,i)=>({x:xs(i),y:ys(d[t.n]||0),v:d[t.n]||0})).filter(p=>p.v>0);
+    if(pts.length>=2)s+=`<polyline points="${pts.map(p=>`${p.x},${p.y}`).join(' ')}" fill="none" stroke="${clr}" stroke-width="2" stroke-linejoin="round"/>`;
+    pts.forEach(p=>s+=`<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="${clr}"/>`);
+  });
+  // invisible hit zones — full-height vertical strips, one per data point
+  const stripW=data.length>1?pw/(data.length-1):pw;
+  data.forEach((d,i)=>{
+    const cx=xs(i);
+    s+=`<rect x="${(cx-stripW/2).toFixed(1)}" y="${P.t}" width="${stripW.toFixed(1)}" height="${ph}" fill="transparent" onmouseenter="showLineTip(event,${i})" onmouseleave="hideLineTip()"/>`;
+  });
+  s+=`</svg>`;return s;
+}
+function showLineTip(evt,i){
+  const d=window._ld[i],T=window._lt,C=window._lc;
+  const rows=T.map((t,ti)=>{
+    const v=d[t.n]||0;
+    return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+      <div style="width:8px;height:8px;border-radius:2px;background:${C[ti]};flex-shrink:0"></div>
+      <span style="font-size:11px;color:#888;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px">${esc(t.n)}</span>
+      <span style="font-size:11px;font-weight:700;color:inherit;white-space:nowrap">${v>0?fmtFull(v):'—'}</span>
+    </div>`;
+  }).join('');
+  const html=`<div style="font-weight:700;color:#777;margin-bottom:7px;font-size:10px;text-transform:uppercase;letter-spacing:.5px">${esc(d.label)}</div>${rows}`;
+  const ch=document.getElementById('lch');
+  if(ch){const x=(window._lxs[i]||0).toFixed(1);ch.setAttribute('x1',x);ch.setAttribute('x2',x);ch.setAttribute('display','block');}
+  showTip(evt,html);
+}
+function hideLineTip(){hideTip();const ch=document.getElementById('lch');if(ch)ch.setAttribute('display','none');}
+
+// ─── MODAL LINE CHART TOOLTIP ─────────────────────────────────────────────────
+function showHistTip(evt,i){
+  const p=window._histPts&&window._histPts[i];if(!p)return;
+  const isLight=document.body.classList.contains('light-mode');
+  showTip(evt,`<div style="font-size:13px;font-weight:700;color:${isLight?'#1a1a2e':'#fff'}">${fmtFull(p.v)}</div><div style="font-size:10px;color:#888;margin-top:3px">${esc(p.lbl)}</div>`);
+}
+
+// ─── SVG STACKED BAR CHART ────────────────────────────────────────────────────
+function svgStackedBar(data,tenants,colors){
+  const W=880,H=400,P={t:15,r:20,b:68,l:70};
+  const pw=W-P.l-P.r,ph=H-P.t-P.b;
+  if(!data.length)return`<div class="no-data">No data for selected filters</div>`;
+  const stacks=data.map(d=>tenants.reduce((s,t)=>s+(d[t.n]||0),0));
+  const maxV=Math.max(...stacks,1);
+  const ticks=niceTicks(maxV);const maxT=ticks[ticks.length-1];
+  const bw=Math.max(4,Math.min(22,pw/data.length-2));
+  const ys=v=>(v/maxT)*ph;
+  // store for event handlers
+  window._bd=data; window._bt=tenants; window._bc=colors;
+  let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;display:block;overflow:visible" onmousemove="moveTip(event)">`;
+  ticks.forEach(v=>{const y=P.t+ph-ys(v);s+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="rgba(255,255,255,.05)" stroke-dasharray="3,3"/>`;s+=`<text x="${P.l-5}" y="${y+4}" text-anchor="end" fill="#555" font-size="10">${fmt(v)}</text>`;});
+  s+=`<line x1="${P.l}" y1="${P.t}" x2="${P.l}" y2="${H-P.b}" stroke="rgba(255,255,255,.08)"/>`;
+  s+=`<line x1="${P.l}" y1="${H-P.b}" x2="${W-P.r}" y2="${H-P.b}" stroke="rgba(255,255,255,.08)"/>`;
+  const iv=Math.max(1,Math.floor(data.length/14));
+  data.forEach((d,i)=>{
+    const cx=P.l+(data.length>1?i/(data.length-1):0.5)*pw;
+    const x=cx-bw/2;let cum=0;
+    tenants.forEach((t,ti)=>{const v=d[t.n]||0;if(!v)return;const bh=ys(v);const by=P.t+ph-cum-bh;
+      s+=`<rect x="${x}" y="${by}" width="${bw}" height="${bh}" fill="${colors[ti]}" rx="1" onmouseenter="showBarTip(event,${i},${ti})" onmouseleave="hideTip()"/>`;
+      cum+=bh;});
+    // full-height invisible overlay for column tooltip
+    const stripW=data.length>1?pw/(data.length-1):pw;
+    s+=`<rect x="${(cx-stripW/2).toFixed(1)}" y="${P.t}" width="${stripW.toFixed(1)}" height="${ph}" fill="transparent" onmouseenter="showBarColTip(event,${i})" onmouseleave="hideTip()"/>`;
+    if(i%iv===0)s+=`<text x="${cx}" y="${H-P.b+14}" text-anchor="end" fill="#555" font-size="9" transform="rotate(-45,${cx},${H-P.b+14})">${esc(d.label)}</text>`;
+  });
+  s+=`</svg>`;return s;
+}
+function showBarTip(evt,di,ti){
+  const d=window._bd[di],t=window._bt[ti],clr=window._bc[ti];
+  const v=d[t.n]||0;
+  const html=`<div style="font-weight:700;color:#777;margin-bottom:6px;font-size:10px;text-transform:uppercase;letter-spacing:.5px">${esc(d.label)}</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="width:8px;height:8px;border-radius:2px;background:${clr}"></div>
+      <span style="font-size:12px;color:#888;flex:1">${esc(t.n)}</span>
+      <span style="font-size:12px;font-weight:700;color:inherit">${fmtFull(v)}</span>
+    </div>`;
+  showTip(evt,html);
+}
+function showBarColTip(evt,i){
+  const d=window._bd[i],T=window._bt,C=window._bc;
+  const rows=T.map((t,ti)=>{const v=d[t.n]||0;if(!v)return'';
+    return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+      <div style="width:8px;height:8px;border-radius:2px;background:${C[ti]};flex-shrink:0"></div>
+      <span style="font-size:11px;color:#888;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px">${esc(t.n)}</span>
+      <span style="font-size:11px;font-weight:700;color:inherit;white-space:nowrap">${fmtFull(v)}</span>
+    </div>`;}).filter(Boolean).join('');
+  const total=T.reduce((s,t)=>s+(d[t.n]||0),0);
+  const html=`<div style="font-weight:700;color:#777;margin-bottom:7px;font-size:10px;text-transform:uppercase;letter-spacing:.5px">${esc(d.label)}</div>${rows}
+    <div style="border-top:1px solid var(--bd2);margin-top:6px;padding-top:6px;display:flex;justify-content:space-between">
+      <span style="font-size:11px;color:#777">Total</span>
+      <span style="font-size:11px;font-weight:700;color:inherit">${fmtFull(total)}</span>
+    </div>`;
+  showTip(evt,html);
+}
+
+// ─── SIMPLE HORIZONTAL BAR (for modal) ───────────────────────────────────────
+function hBar(data,key,color,formatter,opts){
+  opts=opts||{};
+  const vals=data.map(d=>d[key]||0);
+  const maxV=Math.max(...vals,0.001);
+  return data.map(d=>{
+    const v=d[key]||0;
+    const pct=(v/maxV)*100;
+    const lbl=d.year||d.month||'';
+    // invertGood:true means lower=good (occ cost %); flag when above threshold
+    const barClr=opts.threshold!=null?(opts.invertGood===false?(v<opts.threshold?'#e63946':'#2a9d8f'):(v>opts.threshold?'#e63946':'#2a9d8f')):color;
+    const vStr=formatter(v);
+    // YOY badge embedded inside bar
+    const yoy=d.yoy;
+    let yoyHtml='';
+    if(yoy!==null&&yoy!==undefined){
+      const inv=opts.invertGood||false;
+      const neutral=Math.abs(yoy)<0.05;
+      const good=inv?yoy<0:yoy>0;
+      const clr=neutral?'#999':good?'#2a9d8f':'#e63946';
+      const bg=neutral?'rgba(153,153,153,.18)':good?'rgba(42,157,143,.2)':'rgba(230,57,70,.2)';
+      const arr=neutral?'→':yoy>0?'▲':'▼';
+      yoyHtml=`<span style="font-size:9px;font-weight:700;color:${clr};background:${bg};padding:1px 5px;border-radius:3px;white-space:nowrap;flex-shrink:0">${arr}&nbsp;${Math.abs(yoy).toFixed(1)}%</span>`;
+    }
+    const isLight=document.body.classList.contains('light-mode');
+    const valClr=isLight?'#1a1a2e':'#fff';
+    return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+      <div style="width:42px;font-size:10px;color:var(--text3);text-align:right;flex-shrink:0">${esc(lbl)}</div>
+      <div style="flex:1;background:var(--surface);border-radius:4px;height:26px;position:relative;overflow:hidden">
+        <div style="position:absolute;left:0;top:0;bottom:0;background:${barClr};border-radius:4px;width:${pct.toFixed(1)}%;opacity:.8;transition:width .3s"></div>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-end;padding:0 8px;pointer-events:none">
+          <div style="min-width:64px;text-align:right;flex-shrink:0">${yoyHtml}</div>
+          <div style="min-width:72px;text-align:right;flex-shrink:0;padding-left:6px"><span style="font-size:11px;font-weight:600;color:${valClr};white-space:nowrap">${esc(vStr)}</span></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─── YOY BADGE ────────────────────────────────────────────────────────────────
+function yoyBadge(val,invertGood){
+  if(val===null||val===undefined)return'';
+  const neutral=Math.abs(val)<0.05;
+  const good=invertGood?val<0:val>0;
+  const clr=neutral?'#888':good?'#2a9d8f':'#e63946';
+  const arr=neutral?'→':val>0?'▲':'▼';
+  const lbl=invertGood?`${arr} ${Math.abs(val).toFixed(1)} pts`:`${arr} ${Math.abs(val).toFixed(1)}%`;
+  return`<span class="yoy-val" style="color:${clr}">${lbl} YoY</span>`;
+}
+
+// ─── OCC BADGE ────────────────────────────────────────────────────────────────
+function occBadge(pct,thr,small){
+  if(pct===null||pct===undefined)return'—';
+  const under=pct>thr;  // above threshold = flagged (rent exceeding % of sales)
+  const clr=under?'#e63946':'#2a9d8f';
+  const bg=under?'rgba(230,57,70,.15)':'rgba(42,157,143,.15)';
+  const p=small?'1px 5px':'3px 8px';
+  return`<div class="occ-badge" style="background:${bg};border:1px solid ${clr}40;padding:${p}">
+    <span style="font-size:${small?9:11}px">${under?'⚠':'✓'}</span>
+    <span style="font-size:${small?9:11}px;font-weight:700;color:${clr}">${pct.toFixed(1)}%</span>
+    ${!small?`<span style="font-size:9px;color:${clr}99">max. ${thr}%</span>`:''}
+  </div>`;
+}
+
+// ─── MODAL HTML ───────────────────────────────────────────────────────────────
+function modalHTML(tenant,color,rentData,reviewData){
+  const thr=OCC_THRESH[tenant.c];
+  const rent=grossRent(tenant.n,tenant.a,rentData);
+  const totalSales=t12Sales(tenant);
+  const totalPSF=tenant.a>0&&totalSales>0?(totalSales/tenant.a).toFixed(2):'—';
+  const rentPSF=rent&&tenant.a>0?(rent/tenant.a).toFixed(2):'—';
+
+  // sales per year
+  const spYear=tenant.y.map((yd,i,arr)=>{
+    const s=yd.m.reduce((a,b)=>a+b,0);
+    const p=i>0?arr[i-1].m.reduce((a,b)=>a+b,0):null;
+    return{year:String(yd.yr),sales:s,yoy:p&&p>0?(s-p)/p*100:null};
+  });
+
+  // sales per month (avg + mom)
+  const flat=[];
+  [...tenant.y].sort((a,b)=>a.yr-b.yr).forEach(yd=>yd.m.forEach((v,mi)=>{if(v>0)flat.push({yr:yd.yr,mi,val:v});}));
+  const spMonth=MONTHS.map((mo,mi)=>{
+    const vals=tenant.y.map(yd=>yd.m[mi]).filter(v=>v>0);
+    const avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;
+    const entry=flat.map((f,i)=>({...f,i})).filter(f=>f.mi===mi).slice(-1)[0];
+    let mom=null;if(entry){const prev=flat[entry.i-1];if(prev&&prev.val>0)mom=(entry.val-prev.val)/prev.val*100;}
+    return{month:mo,avg,yoy:mom};
+  });
+
+  // sales per SF per year
+  const spPSF=tenant.y.map((yd,i,arr)=>{
+    const t=yd.m.reduce((a,b)=>a+b,0);
+    const psf=tenant.a>0?parseFloat((t/tenant.a).toFixed(2)):0;
+    const pt=i>0?arr[i-1].m.reduce((a,b)=>a+b,0):null;
+    const pp=pt&&tenant.a>0?pt/tenant.a:null;
+    return{year:String(yd.yr),psf,yoy:pp&&pp>0?(psf-pp)/pp*100:null};
+  });
+
+  // occ cost % per year (lower = healthier)
+  const occYear=spYear.map((d,i,arr)=>{
+    const o=d.sales>0&&rent?rent/d.sales*100:null;
+    const p=i>0&&arr[i-1].sales>0&&rent?rent/arr[i-1].sales*100:null;
+    return{year:d.year,occ:o,yoy:o!==null&&p!==null?o-p:null};
+  });
+
+  // monthly history line
+  const histData=[];
+  [...tenant.y].sort((a,b)=>a.yr-b.yr).forEach(yd=>MONTHS.forEach((mo,mi)=>histData.push({label:`${mo} ${yd.yr}`,sales:yd.m[mi]>0?yd.m[mi]:null})));
+  let hs=histData.findIndex(d=>d.sales!==null),he=histData.length-1;
+  while(he>hs&&histData[he].sales===null)he--;
+  const histTrimmed=histData.slice(hs,he+1);
+
+  // reviews
+  const scores=reviewData[tenant.n]||{google:{score:null,count:null},opentable:{score:null,count:null},resy:{score:null,count:null},yelp:{score:null,count:null}};
+  const plats=[scores.google,scores.opentable,scores.resy,scores.yelp].filter(p=>p?.score!=null&&p.score!=='N/A');
+  const avgRev=plats.length?plats.reduce((a,p)=>a+p.score,0)/plats.length:null;
+
+  const statItems=[
+    {l:'Size',v:`${tenant.a.toLocaleString()} SF`},
+    {l:'Years of Data',v:tenant.y.length},
+    {l:'T-12 Sales',v:fmt(totalSales)},
+    {l:'T-12 $/SF',v:`$${totalPSF}`},
+    {l:'Gross Rent PSF',v:rentPSF!=='—'?`$${rentPSF}`:'—'},
+    {l:'Annual Gross Rent',v:rent?fmt(rent):'—'},
+  ];
+
+  // build hist SVG (single line)
+  const W=860,H=200,P={t:10,r:15,b:50,l:65};
+  const pw=W-P.l-P.r,ph=H-P.t-P.b;
+  const histVals=histTrimmed.map(d=>d.sales||0).filter(v=>v>0);
+  const maxH=Math.max(...histVals,1);
+  const hticks=niceTicks(maxH,4);const maxHT=hticks[hticks.length-1];
+  const hxs=i=>P.l+(histTrimmed.length>1?i/(histTrimmed.length-1):0.5)*pw;
+  const hys=v=>P.t+ph-(v/maxHT)*ph;
+  let histSVG=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;display:block;overflow:visible">`;
+  hticks.forEach(v=>{const y=hys(v);histSVG+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="rgba(255,255,255,.05)" stroke-dasharray="3,3"/>`;histSVG+=`<text x="${P.l-5}" y="${y+4}" text-anchor="end" fill="#555" font-size="9">${fmt(v)}</text>`;});
+  const hiv=Math.max(1,Math.floor(histTrimmed.length/16));
+  histTrimmed.forEach((d,i)=>{if(i%hiv===0){const x=hxs(i);histSVG+=`<text x="${x}" y="${H-P.b+12}" text-anchor="end" fill="#555" font-size="8" transform="rotate(-45,${x},${H-P.b+12})">${esc(d.label)}</text>`;}});
+  histSVG+=`<line x1="${P.l}" y1="${P.t}" x2="${P.l}" y2="${H-P.b}" stroke="rgba(255,255,255,.08)"/>`;
+  histSVG+=`<line x1="${P.l}" y1="${H-P.b}" x2="${W-P.r}" y2="${H-P.b}" stroke="rgba(255,255,255,.08)"/>`;
+  const hpts=histTrimmed.map((d,i)=>d.sales?{x:hxs(i),y:hys(d.sales),v:d.sales,lbl:d.label}:null).filter(Boolean);
+  window._histPts=hpts;
+  if(hpts.length>=2){
+    // shaded area under line
+    const firstPt=hpts[0],lastPt=hpts[hpts.length-1];
+    histSVG+=`<polygon points="${firstPt.x},${H-P.b} ${hpts.map(p=>`${p.x},${p.y}`).join(' ')} ${lastPt.x},${H-P.b}" fill="${color}" opacity=".08"/>`;
+    histSVG+=`<polyline points="${hpts.map(p=>`${p.x},${p.y}`).join(' ')}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+  }
+  // visible dots + larger invisible hit targets for hover
+  hpts.forEach((p,i)=>{
+    histSVG+=`<circle cx="${p.x}" cy="${p.y}" r="4" fill="${color}" stroke="${color}30" stroke-width="4" pointer-events="none"/>`;
+    histSVG+=`<circle cx="${p.x}" cy="${p.y}" r="10" fill="transparent" style="cursor:crosshair" onmouseenter="showHistTip(event,${i})" onmousemove="moveTip(event)" onmouseleave="hideTip()"/>`;
+  });
+  histSVG+=`</svg>`;
+
+  // review scores come from Excel via reviewData — no local edit state needed
+
+  return`<div class="overlay" onclick="closeModal()">
+  <div class="modal" style="border:1px solid ${color}35" onclick="event.stopPropagation()">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-title-row">
+          <div style="width:12px;height:12px;border-radius:3px;background:${color};flex-shrink:0"></div>
+          <h2 style="font-size:22px;font-weight:800;color:var(--text);margin:0">${esc(tenant.n)}</h2>
+          <span style="font-size:10px;font-weight:700;color:${CAT_COLORS[tenant.c]};background:${CAT_COLORS[tenant.c]}20;padding:2px 8px;border-radius:6px">${CAT_LABELS[tenant.c]}</span>
+        </div>
+        <div class="modal-stats">
+          ${statItems.map(s=>`<div class="stat-box"><div class="stat-l">${esc(s.l)}</div><div class="stat-v">${esc(s.v)}</div></div>`).join('')}
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="chart-section" style="border-color:${color}25">
+        <div class="hist-hdr">
+          <div class="section-lbl" style="color:${color}">Monthly Sales History</div>
+          <div class="hist-yr-sum">
+            ${tenant.y.slice().sort((a,b)=>a.yr-b.yr).map(yd=>{const t=yd.m.reduce((a,b)=>a+b,0);return t>0?`<div class="hist-yr"><div class="hy">${yd.yr}</div><div class="hv">${fmt(t)}</div></div>`:''}).join('')}
+          </div>
+        </div>
+        ${histSVG}
+      </div>
+
+      <div class="chart-section">
+        <div class="section-lbl" style="color:${color}">Sales Per Year</div>
+        ${hBar(spYear,'sales',color,fmtFull)}
+      </div>
+
+      <div class="chart-section">
+        <div class="section-lbl" style="color:${color}">Sales Per Month <span style="font-size:9px;color:#556;font-weight:400;text-transform:none;letter-spacing:0">avg across all years · badge shows MoM change</span></div>
+        ${hBar(spMonth,'avg',color,fmtFull)}
+      </div>
+
+      ${tenant.a>0?`<div class="chart-section">
+        <div class="section-lbl" style="color:${color}">Sales Per SF <span style="font-size:9px;color:#556;font-weight:400;text-transform:none;letter-spacing:0">annual total ÷ ${tenant.a.toLocaleString()} SF</span></div>
+        ${hBar(spPSF,'psf',color,v=>'$'+v.toFixed(2)+'/SF')}
+      </div>`:''}
+
+      ${rent!==null?`<div class="chart-section">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+          <div class="section-lbl" style="color:${color};margin-bottom:0">Occupancy Cost Ratio</div>
+          <div style="font-size:9px;color:#556">annual gross rent ÷ annual sales · threshold: ${thr}% max.</div>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
+            <span style="font-size:9px;color:#556">Most recent:</span>
+            ${(()=>{const last=occYear.filter(d=>d.occ!==null).slice(-1)[0];return last?occBadge(last.occ,thr):'<span style="color:#555">—</span>';})()}
+          </div>
+        </div>
+        ${hBar(occYear.filter(d=>d.occ!==null),'occ',color,v=>v.toFixed(1)+'%',{threshold:thr,invertGood:true})}
+        <div style="margin-top:6px;font-size:9px;color:#556;display:flex;gap:16px">
+          <span><span style="color:#2a9d8f;font-weight:700">●</span> Below threshold (healthy)</span>
+          <span><span style="color:#e63946;font-weight:700">●</span> Above threshold (flag)</span>
+        </div>
+      </div>`:''}
+
+      <div class="chart-section">
+        <div class="edit-row">
+          <div class="avg-score">
+            <div class="avg-lbl">Combined Avg. Rating</div>
+            ${avgRev!==null?`<div class="avg-val"><span class="avg-num">${avgRev.toFixed(1)}</span><span style="font-size:18px;color:#e9c46a">★</span><span style="font-size:10px;color:#556">/ 5.0 · ${plats.length} platform${plats.length>1?'s':''}</span></div>`:`<div style="font-size:13px;color:#444">No scores available</div>`}
+          </div>
+        </div>
+        <div class="section-lbl" style="color:${color}">Review Scores</div>
+          <div class="reviews-panel">
+            ${[{k:'google',lbl:'Google',icon:'🔍'},{k:'opentable',lbl:'OpenTable',icon:'🪑'},{k:'resy',lbl:'Resy',icon:'🍽'},{k:'yelp',lbl:'Yelp',icon:'⭐'}].map(({k,lbl,icon})=>{
+              const d=scores[k];const has=d?.score!=null&&d.score!=='N/A';
+              return`<div class="plat-card"><div class="plat-icon">${icon}</div><div class="plat-name">${lbl}</div>${has?`<div class="plat-score"><span class="score-num">${Number(d.score).toFixed(1)}</span><span class="score-star">★</span></div>${d.count?`<div class="score-ct">${Number(d.count).toLocaleString()} reviews</div>`:''}`:`<div style="font-size:12px;color:#444;padding-top:6px">—</div>`}</div>`;
+            }).join('')}
+          </div>
+      </div>
+
+    </div>
+  </div>
+</div>`;
+}
+
+// ─── COMPUTE CHART DATA ───────────────────────────────────────────────────────
+function getChartData(tenants,activeYears,activeMonths,metric){
+  const data=[];
+  [...activeYears].sort().forEach(yr=>{
+    MONTHS.forEach((mo,mi)=>{
+      if(!activeMonths.has(mo))return;
+      const pt={label:`${mo} ${yr}`};let has=false;
+      tenants.forEach(t=>{const yd=t.y.find(x=>x.yr===yr);const raw=yd?yd.m[mi]:0;if(raw>0){pt[t.n]=metric==='psf'&&t.a>0?parseFloat((raw/t.a).toFixed(2)):raw;has=true;}});
+      if(has)data.push(pt);
+    });
+  });
+  return data;
+}
+
+// ─── MAIN RENDER ──────────────────────────────────────────────────────────────
+function render(){
+  const pd=PROP_DATA[S.prop];
+  const pc=PROP_CONFIG.find(p=>p.id===S.prop);
+  const TENANTS=pd.tenants;
+  const rentData=pd.rent;
+  const reviewData=pd.reviews;
+  const allYrs=allYearsFor(TENANTS);
+
+  // view tenants filtered by category
+  const viewTenants=TENANTS.filter(t=>t.y.length>0&&(S.chartView==='all'||t.c===S.chartView));
+
+  // totals per tenant — for chart only (respects year/month filters)
+  const totals={};
+  viewTenants.forEach(t=>{
+    let s=0;
+    t.y.forEach(yd=>{if(!S.activeYears.has(yd.yr))return;yd.m.forEach((v,mi)=>{if(S.activeMonths.has(MONTHS[mi]))s+=v;});});
+    if(s>0)totals[t.n]=S.metric==='psf'&&t.a>0?parseFloat((s/t.a).toFixed(2)):s;
+  });
+  const grand=Object.values(totals).reduce((a,b)=>a+b,0);
+
+  // T-12 totals — fixed, always trailing 12 months (used for tenant cards and buttons)
+  const t12Totals={};
+  viewTenants.forEach(t=>{const s=t12Sales(t);if(s>0)t12Totals[t.n]={sales:s,psf:t.a>0?parseFloat((s/t.a).toFixed(2)):null};});
+  const chartData=getChartData(viewTenants,S.activeYears,S.activeMonths,S.metric);
+  const tenantColors=viewTenants.map(t=>COLORS[TENANTS.indexOf(t)%COLORS.length]);
+
+  // sidebar tenant list
+  const filtered=TENANTS.filter(t=>t.n.toLowerCase().includes(S.search.toLowerCase()));
+  const visible=S.showAll?filtered:filtered.slice(0,20);
+
+  // T-12 totals sorted (tenant cards always show T-12, not filter-dependent)
+  const totSorted=Object.entries(t12Totals).sort((a,b)=>b[1].sales-a[1].sales);
+
+  let html=`<div id="root-inner" style="--pc:${pc.color}">`;
+
+  // ── HEADER
+  const isLight=document.body.classList.contains('light-mode');
+  html+=`<div class="hdr" style="--pc:${pc.color}">
+    <div class="hdr-inner">
+      <div class="brand-left">
+        <div class="brand-wordmark">Rebees Management</div>
+        <div class="sub">${S.ownerMode?'Owner Sales Report':'Comparative Sales Analysis'}</div>
+      </div>
+      <div class="hdr-tabs-area">
+        ${S.ownerMode?
+          `<div class="owner-banner">
+            <div class="ob-icon">🏢</div>
+            <div>
+              <div class="ob-name">${esc(pc.label)}</div>
+              <div class="ob-meta">${pd.tenants.length} tenants${pd.lastUpdated?' · Data as of '+pd.lastUpdated:''}</div>
+            </div>
+          </div>`:
+          `<div class="prop-tabs">
+            ${PROP_CONFIG.map(p=>{
+              const pHasData=PROP_DATA[p.id].tenants.length>0;
+              const pUpd=PROP_DATA[p.id].lastUpdated;
+              return`<div style="position:relative;display:flex;flex-direction:column;gap:4px;min-width:160px">
+                <button class="prop-tab${S.prop===p.id?' active':''}" style="--pc:${p.color};width:100%" onclick="switchProp('${p.id}')">
+                  <div class="pname">${esc(p.label)}</div>
+                  <div class="pmeta">${pHasData?'<span style="color:#2a9d8f">●</span> '+PROP_DATA[p.id].tenants.length+' tenants'+(pUpd?' · Updated '+pUpd:''):'<span style="color:#e9c46a">○</span> Awaiting data'}</div>
+                </button>
+                <div style="display:flex;gap:4px;width:100%">
+                  <button onclick="event.stopPropagation();copyOwnerLink('${p.id}',this)" style="display:flex;align-items:center;justify-content:center;gap:4px;padding:3px 8px;border-radius:6px;border:1px solid var(--bd);background:var(--surface);color:var(--text3);font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;flex:1;min-width:0;white-space:nowrap;overflow:hidden" onmouseenter="this.style.color='${p.color}';this.style.borderColor='${p.color}'" onmouseleave="this.style.color='';this.style.borderColor=''">🔗 Owner Link</button>
+                  <button onclick="event.stopPropagation();generateOwnerReport('${p.id}')" style="display:flex;align-items:center;justify-content:center;gap:4px;padding:3px 8px;border-radius:6px;border:1px solid var(--bd);background:var(--surface);color:var(--text3);font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;flex:1;min-width:0;white-space:nowrap;overflow:hidden" onmouseenter="this.style.color='${p.color}';this.style.borderColor='${p.color}'" onmouseleave="this.style.color='';this.style.borderColor=''">📄 Report</button>
+                </div>
+              </div>`;
+            }).join('')}
+          </div>
+          <div class="owner-tools">
+            <span style="font-size:10px;color:var(--text4);align-self:center">Use <strong>🔗 Share Page</strong> under each property to generate a SharePoint-ready file, or <strong>📄 Report</strong> for a full detailed report.</span>
+          </div>`
+        }
+      </div>
+      ${!S.ownerMode?`<button class="theme-toggle" onclick="toggleTheme()">${isLight?'🌙 Dark mode':'☀️ Light mode'}</button>`:''}
+    </div>
+  </div>`;
+
+  html+=`<div class="inner" style="--pc:${pc.color}">`;
+
+  // empty state
+  if(!TENANTS.length){
+    html+=`<div class="empty-state">
+      <div class="empty-icon">📊</div>
+      <div class="empty-title">No data loaded yet</div>
+      <div class="empty-desc">${esc(pc.label)} will be populated automatically each Tuesday, or upload the Retail Sales Excel file and ask Claude to update this dashboard.</div>
+    </div>`;
+    html+=`</div>`;
+    document.getElementById('root').innerHTML=html+`<div class="ftr">Rebees Management · Sales Dashboard · Awaiting data</div>`;
+    return;
+  }
+
+  // ── KPIs
+  // ── Property-level aggregates ──────────────────────────────────────────────
+  const propRevScores=TENANTS.map(t=>{const rs=reviewData[t.n];if(!rs)return null;const plats=[rs.google,rs.opentable,rs.resy,rs.yelp].filter(p=>p?.score!=null&&p.score!=='N/A');return plats.length?plats.reduce((a,p)=>a+p.score,0)/plats.length:null;}).filter(s=>s!==null);
+  const propAvgRep=propRevScores.length?propRevScores.reduce((a,v)=>a+v,0)/propRevScores.length:null;
+  const propOccList=TENANTS.map(t=>{const s=t12Sales(t);if(!s)return null;const r=grossRent(t.n,t.a,rentData);return r?s/r:null;}).filter(v=>v!==null);
+  const propAvgOcc=propOccList.length?propOccList.reduce((a,v)=>a+v,0)/propOccList.length:null;
+
+  html+=`<div class="kpi-row">
+    ${[{l:'Active Tenants',v:viewTenants.length},{l:'Grand Total',v:fmt(grand)},{l:'Years',v:S.activeYears.size},{l:'Months',v:S.activeMonths.size},{l:'Last Updated',v:pd.lastUpdated||'—'}].map(x=>`<div class="kpi"><div class="kl">${x.l}</div><div class="kv">${x.v}</div></div>`).join('')}
+    ${propAvgRep!==null?`<div class="kpi"><div class="kl">Avg Tenant Rating</div><div class="kv">${propAvgRep.toFixed(1)} <span style="font-size:13px;color:#e9c46a">★</span></div></div>`:''}
+    ${propAvgOcc!==null?`<div class="kpi"><div class="kl">Avg Occ. Cost %</div><div class="kv" style="font-size:15px">${propAvgOcc.toFixed(1)}%</div></div>`:''}
+  </div>`;
+
+  html+=`<div class="layout">`;
+
+  // ── SIDEBAR
+  html+=`<div class="sidebar">
+    <div class="panel">
+      <div class="panel-lbl">Chart Type</div>
+      <div class="toggle-row">
+        <button class="tog-btn${S.chartType==='line'?' on':''}" onclick="set({chartType:'line'})">Line</button>
+        <button class="tog-btn${S.chartType==='bar'?' on':''}" onclick="set({chartType:'bar'})">Bar</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-lbl">Years</div>
+      <div class="yr-grid">
+        ${allYrs.map(y=>`<button class="yr-btn${S.activeYears.has(y)?' on':''}" onclick="toggleYear(${y})">${y}</button>`).join('')}
+      </div>
+    </div>
+    <div class="panel">
+      <div class="mo-hdr">
+        <div class="panel-lbl" style="margin-bottom:0">Months</div>
+        <div style="display:flex;gap:6px">
+          <button class="mo-link" style="color:#457b9d" onclick="set({activeMonths:new Set(MONTHS)})">All</button>
+          <button class="mo-link" style="color:#888" onclick="set({activeMonths:new Set()})">None</button>
+        </div>
+      </div>
+      <div class="mo-grid">
+        ${MONTHS.map(mo=>`<button class="mo-btn${S.activeMonths.has(mo)?' on':''}" onclick="toggleMonth('${mo}')">${mo}</button>`).join('')}
+      </div>
+    </div>
+    <div class="panel" style="display:flex;flex-direction:column">
+      <div class="panel-lbl">Tenants</div>
+      <div style="font-size:9px;color:#445;font-style:italic;margin-bottom:6px">Click a tenant to view detail</div>
+      <input class="ten-search" type="text" placeholder="Search tenants..." value="${esc(S.search)}" oninput="set({search:this.value})"/>
+      <div class="ten-list">
+        ${visible.map(t=>{
+          const ci=TENANTS.indexOf(t);
+          const occ=occCost(t,rentData);
+          const thr=OCC_THRESH[t.c];
+          const flagged=occ!==null&&occ>thr;
+          return`<div class="ten-item" onclick="openModal(${ci})">
+            <div class="ten-dot" style="background:${COLORS[ci%COLORS.length]}"></div>
+            <div class="ten-info">
+              <div class="ten-name">${esc(t.n)}</div>
+              <div class="ten-sf">${t.a.toLocaleString()} SF</div>
+            </div>
+            ${flagged?`<span title="Occ. Cost ${occ.toFixed(1)}% — above ${thr}% threshold" style="font-size:12px;flex-shrink:0">⚠️</span>`:''}
+            <div class="cat-badge" style="color:${CAT_COLORS[t.c]};background:${CAT_COLORS[t.c]}15">${CAT_LABELS[t.c]}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      ${filtered.length>20?`<button class="show-more" onclick="set({showAll:${!S.showAll}})">${S.showAll?'Show less':'Show all '+filtered.length+' tenants'}</button>`:''}
+    </div>
+  </div>`;
+
+  // ── RIGHT PANEL
+  html+=`<div class="right">
+    <div class="chart-panel">
+      <div class="ctrl-row">
+        <div class="ctrl-grp">
+          <span class="ctrl-lbl">View by</span>
+          ${[{k:'all',l:'All Tenants',c:pc.color},{k:'fb',l:'🍽 Food & Bev',c:CAT_COLORS.fb},{k:'rt',l:'🛍 Retail',c:CAT_COLORS.rt},{k:'sv',l:'✂ Services',c:CAT_COLORS.sv}].map(b=>`<button class="view-btn${S.chartView===b.k?' on':''}" style="--btn-c:${b.c}" onclick="set({chartView:'${b.k}'})">${b.l}</button>`).join('')}
+        </div>
+        <div class="ctrl-grp">
+          <span class="ctrl-lbl">Metric</span>
+          ${[{k:'sales',l:'Sales ($)'},{k:'psf',l:'Sales / SF'}].map(b=>`<button class="metric-btn${S.metric===b.k?' on':''}" onclick="set({metric:'${b.k}'})">${b.l}</button>`).join('')}
+        </div>
+      </div>
+      ${S.chartType==='line'?svgLine(chartData,viewTenants,tenantColors):svgStackedBar(chartData,viewTenants,tenantColors)}
+    </div>
+
+    ${totSorted.length?`<div class="tot-panel">
+      <div class="tot-hdr">
+        <div class="tot-lbl">T-12 Sales — ${S.chartView==='all'?'All Tenants':CAT_LABELS[S.chartView]}</div>
+        <div class="tot-legend">
+          <span><span style="color:#2a9d8f;font-weight:700">✓</span> Healthy occ. cost ratio</span>
+          <span><span style="color:#e63946;font-weight:700">⚠</span> Above threshold</span>
+        </div>
+      </div>
+      <div class="tot-grid">
+        ${totSorted.map(([name,t12data])=>{
+          const ci=TENANTS.findIndex(t=>t.n===name);
+          const tn=TENANTS[ci];
+          const occ=occCost(tn,rentData);
+          const thr=OCC_THRESH[tn?.c];
+          const flagged=occ!==null&&occ>thr;
+          const rs=reviewData[name];
+          const platList=rs?[rs.google,rs.opentable,rs.resy,rs.yelp].filter(p=>p?.score!=null&&p.score!=='N/A'):[];
+          const avg=platList.length?platList.reduce((a,p)=>a+p.score,0)/platList.length:null;
+          const cardBg=flagged?'rgba(230,57,70,.06)':'rgba(255,255,255,.03)';
+          const cardBd=flagged?'rgba(230,57,70,.2)':'transparent';
+          const psfStr=t12data.psf!==null?` ($${t12data.psf.toFixed(0)}/SF)`:'';
+          return`<div class="tot-card" style="background:${cardBg};border-color:${cardBd}" onclick="openModal(${ci})"
+            onmouseenter="this.style.background='${flagged?'rgba(230,57,70,.1)':'rgba(255,255,255,.06)'}'"
+            onmouseleave="this.style.background='${cardBg}'">
+            <div class="tot-bar" style="background:${COLORS[ci%COLORS.length]}"></div>
+            <div class="tot-body">
+              <div class="tot-name-row">
+                <span class="tot-name">${esc(name)}</span>
+                <span class="cat-badge" style="color:${CAT_COLORS[tn?.c]};background:${CAT_COLORS[tn?.c]}15">${CAT_LABELS[tn?.c]}</span>
+              </div>
+              <div class="tot-val">${fmt(t12data.sales)}<span style="font-size:10px;color:#889;font-weight:400">${psfStr}</span></div>
+            </div>
+            <div class="tot-right">
+              ${avg!==null?`<div class="rev-score"><div class="rl">Avg Review</div><div class="rv">${avg.toFixed(1)} <span style="font-size:10px;color:#e9c46a">★</span></div></div>`:''}
+              <div class="occ-right"><div class="ol">Occ. Cost % (T-12)</div>${occBadge(occ,thr,true)}</div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`:''}
+  </div>`;
+
+  html+=`</div></div>`; // close layout + inner
+  html+=`<div class="ftr">Rebees Management · Sales Dashboard · ${pd.lastUpdated?'As of '+pd.lastUpdated:'Pending data load'}</div>`;
+
+  // modal
+  if(S.detailIdx!==null&&TENANTS[S.detailIdx]){
+    const t=TENANTS[S.detailIdx];
+    const ci=S.detailIdx;
+    html+=modalHTML(t,COLORS[ci%COLORS.length],rentData,reviewData);
+  }
+
+  document.getElementById('root').innerHTML=html;
+}
+
+// ─── EVENT HANDLERS ───────────────────────────────────────────────────────────
+function switchProp(id){
+  const TENANTS=PROP_DATA[id].tenants;
+  set({prop:id,activeYears:new Set(allYearsFor(TENANTS)),activeMonths:new Set(MONTHS),chartView:'all',metric:'sales',search:'',showAll:false,detailIdx:null});
+}
+function toggleYear(y){const n=new Set(S.activeYears);n.has(y)?n.delete(y):n.add(y);set({activeYears:n});}
+function toggleMonth(mo){const n=new Set(S.activeMonths);n.has(mo)?n.delete(mo):n.add(mo);set({activeMonths:n});}
+function openModal(idx){set({detailIdx:idx});}
+function closeModal(){set({detailIdx:null});}
+function toggleEditReviews(tenantName){
+  if(false){  // edit scores removed — scores now come from Excel
+    // save
+    const p=S.reviewEdits;
+    const parse=v=>v===''||v===null?null:parseFloat(v);
+    const cur=S.reviewOverrides[tenantName]||{};
+    const updated={...cur};
+    if(p.google_score!==undefined)updated.google_score=parse(p.google_score);
+    if(p.google_count!==undefined)updated.google_count=parse(p.google_count);
+    if(p.opentable_score!==undefined)updated.opentable_score=parse(p.opentable_score);
+    if(p.opentable_count!==undefined)updated.opentable_count=parse(p.opentable_count);
+    set({editingReviews:false,reviewEdits:{},reviewOverrides:{...S.reviewOverrides,[tenantName]:updated}});
+  } else {
+    // start editing — pre-fill with current values
+    const pd=PROP_DATA[S.prop];const t=pd.tenants[S.detailIdx];
+    const over=S.reviewOverrides[t.n]||{};
+    const base=pd.reviews[t.n]||{google:{score:null},opentable:{score:null}};
+    set({editingReviews:true,reviewEdits:{
+      google_score:over.google_score!==undefined?over.google_score:base.google?.score??'',
+      google_count:over.google_count!==undefined?over.google_count:base.google?.count??'',
+      opentable_score:over.opentable_score!==undefined?over.opentable_score:base.opentable?.score??'',
+      opentable_count:over.opentable_count!==undefined?over.opentable_count:base.opentable?.count??'',
+    }});
+  }
+}
+function updateReviewEdit(k,v){set({reviewEdits:{...S.reviewEdits,[k]:v}});}
+
+// ─── OWNER TOOLS ─────────────────────────────────────────────────────────────
+function copyOwnerLink(propId,btnEl){
+  // 1. Hardcoded constant (best — works everywhere, no setup needed)
+  if(SHARE_BASE_URL){_doCopyOwnerLink(SHARE_BASE_URL,propId,btnEl);return;}
+  // 2. Already on HTTPS — file is hosted on SharePoint/web server
+  const base=window.location.href.split(/[#?]/)[0];
+  if(!base.startsWith('file://')){_doCopyOwnerLink(base,propId,btnEl);return;}
+  // 3. Local file — fall back to saved URL or prompt user to enter one
+  const saved=localStorage.getItem('rmc_share_url');
+  if(saved){_doCopyOwnerLink(saved,propId,btnEl);return;}
+  _showOwnerUrlModal(propId);
+}
+function _doCopyOwnerLink(baseUrl,propId,btnEl){
+  const clean=baseUrl.replace(/[#?].*/,'');
+  const url=clean+'#'+propId;
+  // Try modern clipboard API first, fall back to execCommand, then alert
+  const doFeedback=()=>_ownerLinkFeedback(url,btnEl);
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(doFeedback).catch(()=>_fallbackCopy(url,btnEl));
+    } else {
+      _fallbackCopy(url,btnEl);
+    }
+  } catch(e){ _fallbackCopy(url,btnEl); }
+}
+function _fallbackCopy(url,btnEl){
+  try{
+    const ta=document.createElement('textarea');
+    ta.value=url;ta.style.cssText='position:fixed;top:-999px;opacity:0';
+    document.body.appendChild(ta);ta.focus();ta.select();
+    const ok=document.execCommand('copy');
+    document.body.removeChild(ta);
+    if(ok) _ownerLinkFeedback(url,btnEl);
+    else   _ownerLinkToast(url);
+  } catch(e){ _ownerLinkToast(url); }
+}
+function _ownerLinkFeedback(url,btnEl){
+  // Flash the button green if we have a reference, always show toast
+  if(btnEl){
+    const orig=btnEl.innerHTML;
+    btnEl.innerHTML='✓ Copied!';btnEl.style.color='#2a9d8f';btnEl.style.borderColor='#2a9d8f';
+    setTimeout(()=>{btnEl.innerHTML=orig;btnEl.style.color='';btnEl.style.borderColor='';},2400);
+  }
+  _ownerLinkToast('✓ Owner link copied!');
+}
+function _ownerLinkToast(msg){
+  const existing=document.getElementById('_ol_toast');if(existing)existing.remove();
+  const t=document.createElement('div');
+  t.id='_ol_toast';
+  const isUrl=msg.startsWith('http');
+  t.innerHTML=isUrl
+    ?`<div style="font-size:11px;font-weight:600;color:#2a9d8f;margin-bottom:6px">✓ Owner link ready — copy it below:</div><input value="${msg}" readonly onclick="this.select()" style="width:100%;padding:5px 8px;border-radius:5px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.4);color:#e0e0e0;font-size:10px;font-family:monospace;outline:none"><div style="font-size:9px;color:#778;margin-top:5px">Ctrl+C / Cmd+C to copy, then paste in email or browser</div>`
+    :`<span style="color:#2a9d8f;font-weight:700">${msg}</span>`;
+  t.style.cssText='position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1a1a2e;border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px 18px;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,.5);min-width:280px;max-width:500px';
+  document.body.appendChild(t);
+  const dur=isUrl?12000:2800;
+  setTimeout(()=>{if(t.parentNode)t.remove();},dur);
+  if(!isUrl)return;
+  t.addEventListener('click',e=>e.stopPropagation());
+  const close=document.createElement('button');
+  close.textContent='✕';close.style.cssText='position:absolute;top:8px;right:10px;background:none;border:none;color:#778;cursor:pointer;font-size:13px;';
+  close.onclick=()=>t.remove();t.style.position='fixed';t.appendChild(close);
+  // Auto-select the input so user can Ctrl+C immediately
+  setTimeout(()=>{const inp=t.querySelector('input');if(inp)inp.select();},60);
+}
+function _showOwnerUrlModal(propId,forceShow){
+  const existing=document.getElementById('_olcfg');if(existing)existing.remove();
+  const saved=localStorage.getItem('rmc_share_url')||'';
+  const pc=PROP_CONFIG.find(p=>p.id===propId);
+  const overlay=document.createElement('div');
+  overlay.id='_olcfg';
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:99999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)';
+  overlay.innerHTML=`<div style="background:#1e2535;border:1px solid rgba(255,255,255,.13);border-radius:16px;padding:30px;max-width:540px;width:92%;box-shadow:0 28px 64px rgba(0,0,0,.6)">
+    <div style="font-size:17px;font-weight:800;color:#fff;margin-bottom:8px">🔗 Configure Owner Links</div>
+    <div style="font-size:12px;color:#778;line-height:1.65;margin-bottom:20px">
+      Owner links work when this dashboard is hosted at a shared web URL — for example, uploaded to <strong style="color:#ccc">SharePoint</strong> or a shared drive.<br><br>
+      Enter the URL where <strong style="color:#ccc">Rebees-Sales-Dashboard.html</strong> is hosted. This is saved once and used every time you copy a link.
+    </div>
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#556;margin-bottom:7px">Hosted Dashboard URL</div>
+    <input id="_olcfg_inp" type="url"
+      placeholder="https://rebeesmanagement.sharepoint.com/.../Rebees-Sales-Dashboard.html"
+      value="${saved}"
+      style="width:100%;padding:11px 13px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.35);color:#e0e0e0;font-size:12px;font-family:inherit;margin-bottom:8px;outline:none;transition:border-color .2s"
+      onfocus="this.style.borderColor='#e63946'"
+      onblur="this.style.borderColor='rgba(255,255,255,.15)'">
+    <div style="font-size:10px;color:#445;line-height:1.55;margin-bottom:22px">
+      The link sent to the <strong style="color:#667">${pc?.label}</strong> owner will be:<br>
+      <code style="display:block;margin-top:5px;padding:6px 10px;background:rgba(0,0,0,.3);border-radius:6px;color:#94a3b8;word-break:break-all;font-size:10px">&lt;your-url&gt;?prop=${propId}</code>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;align-items:center">
+      <div style="flex:1;font-size:10px;color:#445">💡 Alternatively, use <strong style="color:#667">Download Owner Report</strong> to email a standalone file — no hosting needed.</div>
+      <button onclick="document.getElementById('_olcfg').remove()" style="padding:9px 18px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:transparent;color:#778;cursor:pointer;font-family:inherit;font-size:12px">Cancel</button>
+      <button onclick="_saveAndCopyOwnerLink('${propId}')" style="padding:9px 22px;border-radius:8px;border:none;background:linear-gradient(135deg,#e63946,#c0392b);color:#fff;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700">Save &amp; Copy Link</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+  setTimeout(()=>{const i=document.getElementById('_olcfg_inp');if(i)i.focus();},60);
+}
+function _saveAndCopyOwnerLink(propId){
+  const inp=document.getElementById('_olcfg_inp');
+  if(!inp||!inp.value.trim()){if(inp)inp.style.borderColor='#e63946';return;}
+  const url=inp.value.trim();
+  localStorage.setItem('rmc_share_url',url);
+  document.getElementById('_olcfg').remove();
+  _doCopyOwnerLink(url,propId);
+}
+function reconfigureOwnerUrl(){localStorage.removeItem('rmc_share_url');render();}
+
+// ─── STATIC OWNER PAGE (no JS — works on SharePoint) ─────────────────────────
+function generateOwnerSharePage(propId){
+  const pc=PROP_CONFIG.find(p=>p.id===propId);
+  const pd=PROP_DATA[propId];
+  const TENANTS=pd.tenants;
+  const color=pc.color;
+
+  // T-12 window — anchored to lastUpdated so the period header always reflects
+  // the most recent report date, even if some tenants have $0 for recent months.
+  const _luStr=pd.lastUpdated||'';
+  const _luMatch=_luStr.match(/(\w+)\s+(\d{4})/);
+  const _MNAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  let _endYr,_endMo; // 0-indexed month
+  if(_luMatch){_endYr=parseInt(_luMatch[2]);_endMo=_MNAMES.indexOf(_luMatch[1]);}
+  if(!_luMatch||_endMo<0){const _now=new Date();_endYr=_now.getFullYear();_endMo=_now.getMonth();}
+  const t12=[];for(let i=11;i>=0;i--){let m=_endMo-i,y=_endYr;while(m<0){m+=12;y--;}t12.push(y*100+(m+1));}t12.sort((a,b)=>a-b);
+
+  // Monthly totals
+  const monthRows=t12.map(period=>{
+    const yr=Math.floor(period/100),mo=(period%100)-1;
+    let tot=0;
+    TENANTS.forEach(t=>{const yd=t.y.find(y=>y.yr===yr);if(yd)tot+=yd.m[mo]||0;});
+    return{label:MONTHS[mo]+' '+yr,yr,mo,tot};
+  });
+  const grandTotal=monthRows.reduce((s,r)=>s+r.tot,0);
+  const totalSF=TENANTS.reduce((s,t)=>s+(t.a||0),0);
+
+  // Prior full years
+  const minT12Yr=t12.length?Math.floor(t12[0]/100):9999;
+  const allYrs=[...new Set(TENANTS.flatMap(t=>t.y.map(y=>y.yr)))].sort((a,b)=>a-b);
+  const priorYrs=allYrs.filter(y=>y<minT12Yr).slice(-4);
+  const priorRows=priorYrs.map(yr=>{
+    let tot=0;
+    TENANTS.forEach(t=>{const yd=t.y.find(y=>y.yr===yr);if(yd)yd.m.forEach(v=>tot+=v||0);});
+    return{yr,tot};
+  });
+
+  // Tenant summaries
+  const tenantRows=TENANTS.map(t=>{
+    const tot=t12.reduce((s,period)=>{
+      const yr=Math.floor(period/100),mo=(period%100)-1;
+      const yd=t.y.find(y=>y.yr===yr);return s+(yd?yd.m[mo]||0:0);
+    },0);
+    const psf=t.a>0?tot/t.a:null;
+    return{n:t.n,sf:t.a,c:t.c,tot,psf};
+  }).filter(r=>r.tot>0).sort((a,b)=>b.tot-a.tot);
+
+  const fmtD=v=>'$'+Math.round(v).toLocaleString();
+  const dateStr=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const catBadge=c=>({fb:'background:#fce8ea;color:#c0202e',rt:'background:#e3edf5;color:#2d6a96',sv:'background:#e0f2f0;color:#1a7a6e'})[c]||'background:#eee;color:#555';
+  const catLabel=c=>({fb:'Food & Bev',rt:'Retail',sv:'Services'})[c]||c;
+
+  const html=`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${pc.label} — Owner Sales Report</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f3f9;color:#1a1a2e;padding:32px 20px}
+.page{max-width:860px;margin:0 auto}
+.hdr{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:18px;border-bottom:3px solid ${color};margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.brand{font-size:13px;font-weight:800;color:#7C2234;letter-spacing:-.2px;margin-bottom:6px}
+.prop{font-size:30px;font-weight:800;color:${color};line-height:1}
+.sub{font-size:11px;color:#889;margin-top:5px}
+.hdr-right{text-align:right}
+.rpt-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#889}
+.rpt-date{font-size:11px;color:#aaa;margin-top:4px}
+.kpis{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.kpi{background:#fff;border-radius:10px;padding:12px 16px;border:1px solid #dde1f0;flex:1;min-width:130px}
+.kl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#889;margin-bottom:4px}
+.kv{font-size:22px;font-weight:800;color:#1a1a2e}
+.card{background:#fff;border-radius:12px;padding:18px;border:1px solid #dde1f0;margin-bottom:16px}
+.card-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:${color};margin-bottom:12px}
+table{width:100%;border-collapse:collapse}
+th{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#889;padding:6px 10px;text-align:right;border-bottom:2px solid #edf0fa}
+th:first-child{text-align:left}
+td{padding:8px 10px;font-size:12px;border-bottom:1px solid #f2f3f9;text-align:right;color:#1a1a2e}
+td:first-child{text-align:left;font-weight:500}
+tr:last-child td{border-bottom:none}
+.tot td{font-weight:800;background:#f7f8fd;border-top:2px solid #dde1f0;font-size:13px}
+.badge{display:inline-block;font-size:8px;font-weight:700;padding:2px 7px;border-radius:4px;white-space:nowrap}
+.bar-bg{background:#edf0fa;border-radius:3px;height:5px;width:80px;display:inline-block;vertical-align:middle;margin-left:6px}
+.bar-fg{height:100%;border-radius:3px;background:${color}}
+.ftr{text-align:center;margin-top:28px;font-size:10px;color:#bbb}
+@media print{body{padding:0}@page{margin:1.5cm}}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="hdr">
+  <div>
+    <div class="brand">Rebees Management Company</div>
+    <div class="prop">${pc.label}</div>
+    <div class="sub">${TENANTS.length} tenants · ${totalSF>0?totalSF.toLocaleString()+' SF · ':''} ${pd.lastUpdated?'Data as of '+pd.lastUpdated:''}</div>
+  </div>
+  <div class="hdr-right">
+    <div class="rpt-lbl">Owner Sales Report</div>
+    <div class="rpt-date">Trailing 12 Months</div>
+    <div class="rpt-date">Generated ${dateStr}</div>
+  </div>
+</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="kl">T-12 Total Sales</div><div class="kv">${grandTotal>=1e6?'$'+(grandTotal/1e6).toFixed(2)+'M':fmtD(grandTotal)}</div></div>
+  ${totalSF>0?`<div class="kpi"><div class="kl">Sales / SF (T-12)</div><div class="kv">$${(grandTotal/totalSF).toFixed(0)}</div></div>`:''}
+  <div class="kpi"><div class="kl">Active Tenants</div><div class="kv">${tenantRows.length}</div></div>
+  ${totalSF>0?`<div class="kpi"><div class="kl">Total GLA (SF)</div><div class="kv">${totalSF.toLocaleString()}</div></div>`:''}
+</div>
+
+<div class="card">
+  <div class="card-lbl">Monthly Sales — Trailing 12 Months</div>
+  <table>
+    <thead><tr><th>Month</th><th>Total Sales</th>${totalSF>0?'<th>$/SF</th>':''}<th style="width:100px">Trend</th></tr></thead>
+    <tbody>
+      ${(()=>{
+        const max=Math.max(...monthRows.map(r=>r.tot),1);
+        return monthRows.map(r=>`<tr>
+          <td>${r.label}</td>
+          <td>${fmtD(r.tot)}</td>
+          ${totalSF>0?`<td>$${(r.tot/totalSF).toFixed(2)}</td>`:''}
+          <td><div class="bar-bg"><div class="bar-fg" style="width:${((r.tot/max)*100).toFixed(1)}%"></div></div></td>
+        </tr>`).join('');
+      })()}
+      <tr class="tot">
+        <td>T-12 Total</td>
+        <td>${fmtD(grandTotal)}</td>
+        ${totalSF>0?`<td>$${(grandTotal/totalSF).toFixed(2)}</td>`:''}
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+${priorRows.length>0?`<div class="card">
+  <div class="card-lbl">Prior Year Totals</div>
+  <table>
+    <thead><tr><th>Year</th><th>Annual Sales</th>${totalSF>0?'<th>$/SF</th>':''}</tr></thead>
+    <tbody>
+      ${priorRows.map(r=>`<tr>
+        <td>${r.yr}</td>
+        <td>${fmtD(r.tot)}</td>
+        ${totalSF>0?`<td>$${(r.tot/totalSF).toFixed(2)}</td>`:''}
+      </tr>`).join('')}
+    </tbody>
+  </table>
+</div>`:''}
+
+<div class="card">
+  <div class="card-lbl">Tenant Breakdown — T-12 Sales</div>
+  <table>
+    <thead><tr><th>Tenant</th><th>Category</th>${totalSF>0?'<th>SF</th>':''}><th>T-12 Sales</th>${totalSF>0?'<th>$/SF</th>':''}</tr></thead>
+    <tbody>
+      ${tenantRows.map(r=>`<tr>
+        <td>${r.n}</td>
+        <td><span class="badge" style="${catBadge(r.c)}">${catLabel(r.c)}</span></td>
+        ${totalSF>0?`<td>${r.sf?r.sf.toLocaleString():'—'}</td>`:''}
+        <td>${fmtD(r.tot)}</td>
+        ${totalSF>0?`<td>${r.psf?'$'+r.psf.toFixed(2):'—'}</td>`:''}
+      </tr>`).join('')}
+      <tr class="tot">
+        <td>Total</td><td></td>
+        ${totalSF>0?`<td>${totalSF.toLocaleString()}</td>`:''}
+        <td>${fmtD(grandTotal)}</td>
+        ${totalSF>0?`<td>$${(grandTotal/totalSF).toFixed(2)}</td>`:''}
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="ftr">Rebees Management Company &nbsp;·&nbsp; Confidential &nbsp;·&nbsp; ${pc.label} Owner Report</div>
+</div>
+</body>
+</html>`;
+
+  const fname=pc.label.replace(/\s+/g,'-')+'-Owner-Page.html';
+  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=fname;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);
+
+  // Show workflow instructions
+  _ownerLinkToast(`✓ Downloaded ${fname} — Upload to SharePoint, then right-click → Share to get your link.`);
+}
+
+function generateOwnerReport(propId){
+  const pc=PROP_CONFIG.find(p=>p.id===propId);
+  const pd=PROP_DATA[propId];
+  const tenants=pd.tenants;
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const MABBR=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  // ── Helpers ──────────────────────────────────────────────────────────────────
+  function fmtD(n){if(!n||isNaN(n)||n===0)return'—';return'$'+Math.round(n).toLocaleString();}
+  function fmtShort(n){if(!n||isNaN(n))return'—';return n>=1000000?'$'+(n/1000000).toFixed(2)+'M':n>=1000?'$'+(n/1000).toFixed(0)+'K':fmtD(n);}
+  function catLabel(c){return c==='fb'?'Food & Bev':c==='rt'?'Retail':'Services';}
+  function catColor(c){return c==='fb'?'#e76f51':c==='rt'?'#457b9d':'#2a9d8f';}
+  function yearTotal(t,yr){const yd=t.y.find(y=>y.yr===yr);if(!yd)return null;const s=yd.m.reduce((a,v)=>a+v,0);return s>0?s:null;}
+
+  // ── T-12 window: anchored to lastUpdated so recent $0 months are still included ──
+  const _luStr2=pd.lastUpdated||'';
+  const _luMatch2=_luStr2.match(/(\w+)\s+(\d{4})/);
+  const _MNAMES2=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  let _endYr2,_endMo2;
+  if(_luMatch2){_endYr2=parseInt(_luMatch2[2]);_endMo2=_MNAMES2.indexOf(_luMatch2[1]);}
+  if(!_luMatch2||_endMo2<0){_endYr2=now.getFullYear();_endMo2=now.getMonth();}
+  const t12Window=[];for(let i=11;i>=0;i--){let m=_endMo2-i,y=_endYr2;while(m<0){m+=12;y--;}t12Window.push({yr:y,mo:m,label:MABBR[m]+" '"+String(y).slice(2)});}t12Window.sort((a,b)=>(a.yr*100+a.mo)-(b.yr*100+b.mo));
+
+  // ── Prior full years (last 4 complete years before T-12 window) ───────────────
+  const t12Yrs=new Set(t12Window.map(w=>w.yr));
+  const allYrs=[...new Set(tenants.flatMap(t=>t.y.map(yd=>yd.yr)))].sort();
+  // A year is "prior" if it's not purely in the T-12 window
+  // Show up to 4 prior full years
+  const curYr=new Date().getFullYear();
+  const priorShowYears=allYrs.filter(yr=>yr<curYr-1||(yr===curYr-1&&!t12Yrs.has(yr))||(!t12Yrs.has(yr)&&yr<curYr)).slice(-4);
+  // Simplified: just show last 4 years that are before the T-12 window's earliest year
+  const t12StartYr=Math.min(...t12Window.map(w=>w.yr));
+  const priorYrs=allYrs.filter(yr=>yr<t12StartYr).slice(-4);
+
+  // ── Portfolio totals ──────────────────────────────────────────────────────────
+  function getT12Total(t){
+    const all=[];[...t.y].sort((a,b)=>a.yr-b.yr).forEach(yd=>yd.m.forEach(v=>all.push(v)));
+    return all.filter(v=>v>0).slice(-12).reduce((a,v)=>a+v,0);
+  }
+  function getT12Months(t){
+    const all=[];[...t.y].sort((a,b)=>a.yr-b.yr).forEach(yd=>yd.m.forEach((v,mi)=>all.push({yr:yd.yr,mo:mi,val:v})));
+    return all.filter(x=>x.val>0).slice(-12);
+  }
+  const portfolioT12=tenants.reduce((a,t)=>a+getT12Total(t),0);
+  const portfolioYtd=tenants.reduce((a,t)=>{const yd=t.y.find(y=>y.yr===curYr);return a+(yd?yd.m.filter(v=>v>0).reduce((a,v)=>a+v,0):0);},0);
+  const fbCount=tenants.filter(t=>t.c==='fb').length;
+  const rtCount=tenants.filter(t=>t.c==='rt').length;
+  const svCount=tenants.filter(t=>t.c==='sv').length;
+
+  // ── Table rows ────────────────────────────────────────────────────────────────
+  const rows=tenants.map(t=>{
+    const t12Total=getT12Total(t);
+    const psf=t.a>0&&t12Total>0?t12Total/t.a:null;
+
+    // YOY: T-12 vs prior 12 non-zero months
+    const allNZ=[];[...t.y].sort((a,b)=>a.yr-b.yr).forEach(yd=>yd.m.forEach(v=>allNZ.push(v)));
+    const nz=allNZ.filter(v=>v>0);
+    const prior12=nz.slice(-24,-12);
+    const prior12Total=prior12.reduce((a,v)=>a+v,0);
+    const yoy=prior12Total>0&&t12Total>0?((t12Total-prior12Total)/prior12Total*100):null;
+    const yoyStr=yoy!==null
+      ?`<span style="color:${yoy>=0?'#15803d':'#dc2626'};font-weight:700">${yoy>=0?'+':''}${yoy.toFixed(1)}%</span>`
+      :'—';
+
+    // Prior year total cells
+    const priorCells=priorYrs.map(yr=>{
+      const v=yearTotal(t,yr);
+      return`<td class="num py">${v!==null?fmtD(v):'—'}</td>`;
+    }).join('');
+
+    // T-12 month cells — match value to the shared window by yr+mo
+    const t12MonthCells=t12Window.map(w=>{
+      const yd=t.y.find(y=>y.yr===w.yr);
+      const val=yd&&yd.m[w.mo]>0?yd.m[w.mo]:0;
+      return`<td class="num mo">${val>0?fmtD(val):'—'}</td>`;
+    }).join('');
+
+    return`<tr>
+      <td class="tn"><strong>${t.n.replace(/'/g,"&#39;")}</strong></td>
+      <td><span class="cat" style="--cc:${catColor(t.c)}">${catLabel(t.c)}</span></td>
+      <td class="num sf">${t.a>0?t.a.toLocaleString():'—'}</td>
+      ${priorCells}
+      ${t12MonthCells}
+      <td class="num t12tot">${fmtD(t12Total)}</td>
+      <td class="num psf">${psf!==null?'$'+psf.toFixed(2):'—'}</td>
+      <td class="num yoy">${yoyStr}</td>
+    </tr>`;
+  }).join('');
+
+  // Portfolio total row
+  const priorTotalCells=priorYrs.map(yr=>{
+    const tot=tenants.reduce((a,t)=>{const v=yearTotal(t,yr);return a+(v||0);},0);
+    return`<td class="num py tot-cell">${tot>0?fmtD(tot):'—'}</td>`;
+  }).join('');
+  const monthTotalCells=t12Window.map(w=>{
+    const tot=tenants.reduce((a,t)=>{const yd=t.y.find(y=>y.yr===w.yr);return a+(yd&&yd.m[w.mo]>0?yd.m[w.mo]:0);},0);
+    return`<td class="num mo tot-cell">${tot>0?fmtD(tot):'—'}</td>`;
+  }).join('');
+
+  // ── Report HTML ───────────────────────────────────────────────────────────────
+  const reportHtml=`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${pc.label} — Owner Sales Report</title>
+<style>
+@page{size:landscape;margin:12mm 10mm}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:#f0f2f8;color:#1a1a2e;font-size:11px;min-height:100vh}
+.page{padding:24px 28px 20px}
+
+/* ── Header ── */
+.hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;padding-bottom:14px;position:relative}
+.hdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:#7C2234}
+.brand-name{font-size:22px;font-weight:800;color:#7C2234;line-height:1}
+.prop-line{display:flex;align-items:center;gap:8px;margin-top:5px}
+.prop-line-name{font-size:15px;font-weight:700;color:#1a1a2e}
+.prop-badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:9px;font-weight:700;background:${pc.color}22;color:${pc.color};border:1px solid ${pc.color}44;letter-spacing:.3px}
+.hdr-right{text-align:right}
+.rpt-type{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#999;margin-bottom:3px}
+.rpt-date{font-size:13px;font-weight:700;color:#1a1a2e}
+.conf{display:inline-block;margin-top:6px;padding:3px 10px;border-radius:20px;background:#fff8e1;color:#b45309;font-size:9px;font-weight:800;letter-spacing:.5px;border:1px solid #fbbf24}
+
+/* ── KPIs ── */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+.kpi{padding:10px 14px;border-radius:8px;background:#fff;border-left:3px solid ${pc.color};box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.kpi-lbl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#999;margin-bottom:3px}
+.kpi-val{font-size:17px;font-weight:800;color:#1a1a2e;line-height:1.1}
+.kpi-sub{font-size:8.5px;color:#bbb;margin-top:2px}
+
+/* ── Table ── */
+.section-lbl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:${pc.color};margin-bottom:8px}
+.tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid #dde1ec;background:#fff;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+table{width:100%;border-collapse:collapse;white-space:nowrap}
+
+/* column group headers */
+thead tr.grp th{padding:5px 8px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;text-align:center;border-bottom:1px solid rgba(255,255,255,.15)}
+.grp-id{background:#1a1a2e;color:#94a3b8}
+.grp-py{background:#2d3561;color:#c7d2fe}
+.grp-t12{background:#7C2234;color:#f9d7da}
+.grp-sm{background:#0c1a12;color:#86efac}
+
+/* column headers */
+thead tr.cols th{padding:5px 8px;text-align:right;font-size:8.5px;font-weight:700;background:#1e2535;color:#94a3b8;border-bottom:2px solid #7C2234}
+thead tr.cols th.left{text-align:left}
+thead tr.cols th.mo-col{background:#1c0a0a;color:#f87171}
+
+/* body */
+tbody td{padding:5px 8px;vertical-align:middle;border-bottom:1px solid #f0f2f6;font-size:10px}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover:not(.tot-row){background:#f5f7ff}
+tbody tr.tot-row{background:#1a1a2e;font-weight:700}
+tbody tr.tot-row td{color:#f1f5f9;border-top:2px solid #7C2234;border-bottom:none;padding-top:7px;padding-bottom:7px}
+tbody tr.tot-row td.t12tot{background:#5a1a26;color:#f9d7da}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+td.tn{max-width:180px;white-space:normal;word-break:break-word;min-width:130px;font-size:10px}
+td.sf{font-size:9.5px;color:#64748b}
+td.py{color:#4b5563}
+td.mo{color:#374151}
+td.t12tot{font-weight:700;background:#fff8f0;color:#92400e}
+td.psf{color:#1d4ed8;font-weight:600}
+td.yoy{}
+.cat{display:inline-block;padding:2px 6px;border-radius:10px;font-size:8px;font-weight:700;background:color-mix(in srgb,var(--cc) 18%,white);color:var(--cc);border:1px solid color-mix(in srgb,var(--cc) 35%,white)}
+
+/* ── Footer ── */
+.footer{display:flex;justify-content:space-between;align-items:flex-end;padding-top:10px;border-top:1px solid #dde1ec;color:#aab}
+.footer-note{font-size:8.5px;max-width:65%;line-height:1.5}
+.footer-right{text-align:right}
+.footer-brand{font-size:11px;font-weight:800;color:#7C2234}
+.footer-prop{font-size:8.5px;color:#aab;margin-top:2px}
+
+@media print{
+  body{background:#fff}
+  .page{padding:0}
+  .tbl-wrap{border:1px solid #ccc;box-shadow:none}
+  .kpi{box-shadow:none;border:1px solid #dde}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="hdr">
+  <div>
+    <div class="brand-name">Rebees Management</div>
+    <div class="prop-line">
+      <span class="prop-line-name">${pc.label}</span>
+      <span class="prop-badge">${pd.lastUpdated?'Data as of '+pd.lastUpdated:dateStr}</span>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="rpt-type">Owner Sales Report</div>
+    <div class="rpt-date">${dateStr}</div>
+    <div class="conf">🔒 CONFIDENTIAL</div>
+  </div>
+</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="kpi-lbl">Active Tenants</div><div class="kpi-val">${tenants.length}</div><div class="kpi-sub">${fbCount} F&amp;B · ${rtCount} Retail · ${svCount} Services</div></div>
+  <div class="kpi"><div class="kpi-lbl">T-12 Total Sales</div><div class="kpi-val">${fmtShort(portfolioT12)}</div><div class="kpi-sub">Trailing 12 months</div></div>
+  <div class="kpi"><div class="kpi-lbl">${curYr} YTD</div><div class="kpi-val">${fmtShort(portfolioYtd)}</div><div class="kpi-sub">Jan–present ${curYr}</div></div>
+  <div class="kpi"><div class="kpi-lbl">T-12 Period</div><div class="kpi-val" style="font-size:12px;margin-top:2px">${t12Window[0].label} – ${t12Window[t12Window.length-1].label}</div><div class="kpi-sub">Rolling 12-month window</div></div>
+  <div class="kpi"><div class="kpi-lbl">Report Date</div><div class="kpi-val" style="font-size:13px;margin-top:2px">${dateStr}</div></div>
+</div>
+
+<div class="section-lbl">Tenant Sales — Historical Annual Totals &amp; Trailing 12-Month Detail by Month</div>
+<div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr class="grp">
+        <th class="grp-id left" colspan="3">Tenant</th>
+        ${priorYrs.length?`<th class="grp-py" colspan="${priorYrs.length}">Historical Annual Totals</th>`:''}
+        <th class="grp-t12" colspan="${t12Window.length}">Trailing 12 Months (${t12Window[0].label} – ${t12Window[t12Window.length-1].label})</th>
+        <th class="grp-sm" colspan="3">Summary</th>
+      </tr>
+      <tr class="cols">
+        <th class="left">Tenant</th>
+        <th class="left">Category</th>
+        <th class="num">SF</th>
+        ${priorYrs.map(yr=>`<th class="num">${yr} Total</th>`).join('')}
+        ${t12Window.map(w=>`<th class="num mo-col">${w.label}</th>`).join('')}
+        <th class="num">T-12 Total</th>
+        <th class="num">$/SF</th>
+        <th class="num">YOY</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${rows}
+      <tr class="tot-row">
+        <td class="left" colspan="3"><strong>Portfolio Total</strong></td>
+        ${priorTotalCells}
+        ${monthTotalCells}
+        <td class="num t12tot">${fmtD(portfolioT12)}</td>
+        <td class="num">—</td>
+        <td class="num">—</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="footer">
+  <div class="footer-note">This report is confidential and intended solely for the named recipient. Sales figures reported by tenants per lease percentage rent obligations. Do not distribute without written authorization from Rebees Management Company.</div>
+  <div class="footer-right">
+    <div class="footer-brand">Rebees Management</div>
+    <div class="footer-prop">${pc.label} · ${dateStr}</div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>`;
+
+  const blob=new Blob([reportHtml],{type:'text/html;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=pc.label.replace(/\s+/g,'-')+'-Owner-Report.html';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(a.href);
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+// ─── THEME ───────────────────────────────────────────────────────────────────
+function toggleTheme(){
+  const isLight=document.body.classList.toggle('light-mode');
+  localStorage.setItem('rmc_theme',isLight?'light':'dark');
+  render();
+}
+// init theme from localStorage
+(function(){
+  if(localStorage.getItem('rmc_theme')==='light') document.body.classList.add('light-mode');
+})();
+
+render();
+</script>
+</body>
+</html>
